@@ -133,7 +133,7 @@ public class AppDataManager {
                             super.onOpen(db);
 //                        LOG.i("数据库打开成功");
                         }
-                    }).allowMainThreadQueries()//可以在主线程操作
+                    }).allowMainThreadQueries()//可以在主线程操作，测试
                     .build();
         return dbInstance;
     }
