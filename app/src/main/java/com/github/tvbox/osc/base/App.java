@@ -31,7 +31,7 @@ public class App extends MultiDexApplication {
         initParams();
         // OKGo
         OkGoHelper.init();
-        // 初始化Web服务器test88
+        // 初始化Web服务器test88999
         ControlManager.init(this);
         //初始化数据库
         AppDataManager.init();
