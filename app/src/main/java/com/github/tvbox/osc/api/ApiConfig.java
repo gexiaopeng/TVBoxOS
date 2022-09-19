@@ -263,9 +263,9 @@ public class ApiConfig {
             } else {
                  SourceBean sn=getSource(home);
                  if(sn==null){
-                     //setSourceBean(firstSite);
+                     setSourceBean(firstSite);
                  }else {
-                     //setSourceBean(sn);
+                     setSourceBean(sn);
                  }
             }
         }
