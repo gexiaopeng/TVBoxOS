@@ -257,7 +257,7 @@ public class HomeActivity extends BaseActivity {
             //ApiConfig.get().setSourceBean(home);
 
         }
-        tvName.setText((home==null || home.getName()==null)? :"home is null":home.getName());
+        tvName.setText((home==null || home.getName()==null)? "home is null":home.getName());
         if (dataInitOk && jarInitOk) {
             showLoading();
             sourceViewModel.getSort(ApiConfig.get().getHomeSourceBean().getKey());
