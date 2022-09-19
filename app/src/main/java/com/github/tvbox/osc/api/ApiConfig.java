@@ -257,11 +257,16 @@ public class ApiConfig {
         }
         if (sourceBeanList != null && sourceBeanList.size() > 0) {
             String home = Hawk.get(HawkConfig.HOME_API, "");
-            SourceBean sh = getSource(home);
-            if (sh == null)
+             if (home==null || home == "") {
                 setSourceBean(firstSite);
-            else
-                setSourceBean(sh);
+            } else {
+                 SourceBean sn=getSource(home);
+                 if(sn==null){
+                     setSourceBean(firstSite);
+                 }else {
+                     setSourceBean(sn);
+                 }
+            }
         }
         // 需要使用vip解析的flag
         vipParseFlags = DefaultConfig.safeJsonStringList(infoJson, "flags");
