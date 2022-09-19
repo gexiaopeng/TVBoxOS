@@ -253,7 +253,7 @@ public class HomeActivity extends BaseActivity {
             //name=home.getName();
 
         }else{
-            //home=ApiConfig.get().getSource("csp_77");
+            home=ApiConfig.get().getSource("csp_77");
             //ApiConfig.get().setSourceBean(home);
 
         }
