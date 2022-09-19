@@ -251,8 +251,9 @@ public class ApiConfig {
             sb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
-            if (firstSite == null && siteKey!=null && siteKey!="")
+            if (firstSite == null && !siteKey.isEmpty()) {
                 firstSite = sb;
+            }
             sourceBeanList.put(siteKey, sb);
         }
         if (sourceBeanList != null && sourceBeanList.size() > 0) {
