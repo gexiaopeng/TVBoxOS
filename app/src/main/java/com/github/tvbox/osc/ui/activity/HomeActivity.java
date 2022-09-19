@@ -254,7 +254,7 @@ public class HomeActivity extends BaseActivity {
 
         }else{
             home=ApiConfig.get().getSource("csp_77");
-            ApiConfig.get().setSourceBean(home);
+            //ApiConfig.get().setSourceBean(home);
            
         }
         tvName.setText(home.getName());
