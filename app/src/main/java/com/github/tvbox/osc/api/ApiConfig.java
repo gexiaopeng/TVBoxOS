@@ -258,7 +258,7 @@ public class ApiConfig {
         if (sourceBeanList != null && sourceBeanList.size() > 0) {
             String home = Hawk.get(HawkConfig.HOME_API, "");
              if (home==null || home == "") {
-                //setSourceBean(firstSite);
+                setSourceBean(firstSite);
             } else {
                  SourceBean sn=getSource(home);
                  if(sn==null){
