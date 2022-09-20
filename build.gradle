@@ -6,7 +6,10 @@ buildscript {
         mavenCentral()
         maven { url "https://jitpack.io" }
         //maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
-        maven { url 'https://home.jundie.top:81/xwalk/maven2' }
+        maven {
+            allowInsecureProtocol true
+            url 'http://home.jundie.top:81/xwalk/maven2'
+        }
 //        maven { url 'http://9xi4o.tk/maven2' }
     }
     dependencies {
@@ -25,7 +28,10 @@ allprojects {
         maven { url "https://jitpack.io" }
         //maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
 //        maven { url 'http://9xi4o.tk/maven2' }
-        maven { url 'https://home.jundie.top:81/xwalk/maven2' }
+        maven {
+            allowInsecureProtocol true
+            url 'http://home.jundie.top:81/xwalk/maven2'
+        }
     }
 }
 
