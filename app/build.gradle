@@ -34,11 +34,7 @@ android {
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled true
-            applicationVariants.all{
-                variant->variant.outputs.all{
-                  outputFileName = "TVBoxOS-${defaultConfig.versionName}.apk"
-                }
-            }
+          
             ndk {
                 abiFilters 'armeabi-v7a'
             }
