@@ -55,10 +55,12 @@ public class VodController extends BaseController {
                 switch (msg.what) {
                     case 1000: { // seek 刷新
                         mProgressRoot.setVisibility(VISIBLE);
+                        mBottomRoot.setVisibility(VISIBLE);
                         break;
                     }
                     case 1001: { // seek 关闭
                         mProgressRoot.setVisibility(GONE);
+                        mBottomRoot.setVisibility(GONE);
                         break;
                     }
                     case 1002: { // 显示底部菜单
@@ -702,11 +704,13 @@ public class VodController extends BaseController {
                 break;
             case VideoView.STATE_PLAYING:
                 startProgress();
+                hideBottom();//09-22
                 break;
             case VideoView.STATE_PAUSED:
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
+                showBottom();//09-22
                 break;
             case VideoView.STATE_ERROR:
                 listener.errReplay();
@@ -761,6 +765,7 @@ public class VodController extends BaseController {
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
                 if (isInPlayback) {
                     togglePlay();
+                    //showBottom();
                     return true;
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏

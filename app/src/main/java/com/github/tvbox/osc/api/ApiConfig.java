@@ -255,7 +255,9 @@ public class ApiConfig {
             if (firstSite == null && !siteKey.isEmpty()) {
                 firstSite = sb;
             }
-            sourceBeanList.put(siteKey, sb);
+            if(!siteKey.isEmpty()) {
+                sourceBeanList.put(siteKey, sb);
+            }
         }
         if (sourceBeanList != null && sourceBeanList.size() > 0) {
             String home = Hawk.get(HawkConfig.HOME_API, "");
