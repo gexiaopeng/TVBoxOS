@@ -81,7 +81,7 @@ public class ApiConfig {
 
     public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
         // String apiUrl = Hawk.get(HawkConfig.API_URL, "https://gitcode.net/qq_26898231/TVBox/-/raw/main/tv.json"); //normal
-        String apiUrl = Hawk.get(HawkConfig.API_URL, "https://gitcode.net/q284855646/diy/-/raw/root/tv.json");
+        String apiUrl = Hawk.get(HawkConfig.API_URL, "https://gitcode.net/q284855646/diy/-/raw/root/tv.json");//normal
         if (apiUrl.isEmpty()) {
             callback.error("-1");
             return;
