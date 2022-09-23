@@ -56,6 +56,7 @@ public class VodController extends BaseController {
                     case 1000: { // seek 刷新
                         mProgressRoot.setVisibility(VISIBLE);
                         mBottomRoot.setVisibility(VISIBLE);
+                        mToolBar.setVisibility(GONE);
                         break;
                     }
                     case 1001: { // seek 关闭
@@ -65,6 +66,7 @@ public class VodController extends BaseController {
                     }
                     case 1002: { // 显示底部菜单
                         mBottomRoot.setVisibility(VISIBLE);
+                        mToolBar.setVisibility(VISIBLE);
                         mTopRoot1.setVisibility(VISIBLE);
                         mTopRoot2.setVisibility(VISIBLE);
                         mPlayTitle.setVisibility(GONE);
@@ -102,6 +104,7 @@ public class VodController extends BaseController {
     TextView mProgressText;
     ImageView mProgressIcon;
     LinearLayout mBottomRoot;
+    LinearLayout mToolBar;
     LinearLayout mTopRoot1;
     LinearLayout mTopRoot2;
     LinearLayout mParseRoot;
@@ -130,7 +133,7 @@ public class VodController extends BaseController {
     Handler myHandle;
     Runnable myRunnable;
     int myHandleSeconds = 6000;//闲置多少毫秒秒关闭底栏  默认6秒
-
+    private boolean isPaused = false;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -165,6 +168,7 @@ public class VodController extends BaseController {
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
         mBottomRoot = findViewById(R.id.bottom_container);
+        mToolBar=findViewById(R.id.tool_bar);
         mTopRoot1 = findViewById(R.id.tv_top_l_container);
         mTopRoot2 = findViewById(R.id.tv_top_r_container);
         mParseRoot = findViewById(R.id.parse_root);
@@ -274,7 +278,11 @@ public class VodController extends BaseController {
         mNextBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.playNext(false);
+                if (isPaused) {
+                    togglePlay();
+                } else {
+                    listener.playNext(false);
+                }
                 hideBottom();
             }
         });
@@ -703,10 +711,12 @@ public class VodController extends BaseController {
             case VideoView.STATE_IDLE:
                 break;
             case VideoView.STATE_PLAYING:
+                isPaused = false;
                 startProgress();
                 hideBottom();//09-22
                 break;
             case VideoView.STATE_PAUSED:
+                isPaused = true;
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
