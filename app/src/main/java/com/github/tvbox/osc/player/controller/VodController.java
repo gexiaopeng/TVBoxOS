@@ -633,7 +633,7 @@ public class VodController extends BaseController {
     @Override
     protected void setProgress(int duration, int position) {
 
-        if (mIsDragging || isUpdateSeekUI) {
+        if (mIsDragging) {
             return;
         }
         super.setProgress(duration, position);
