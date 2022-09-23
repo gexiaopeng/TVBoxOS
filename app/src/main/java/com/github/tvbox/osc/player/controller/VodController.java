@@ -6,10 +6,7 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -20,6 +17,7 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView;
+import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
@@ -40,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Date;
+import java.util.Locale;
 
 import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
@@ -49,17 +48,20 @@ import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
         super(context);
+        this.context=context;
         mHandlerCallback = new HandlerCallback() {
             @Override
             public void callback(Message msg) {
                 switch (msg.what) {
                     case 1000: { // seek 刷新
+                        isUpdateSeekUI=true;
                         mProgressRoot.setVisibility(VISIBLE);
                         mBottomRoot.setVisibility(VISIBLE);
                         mToolBar.setVisibility(GONE);
                         break;
                     }
                     case 1001: { // seek 关闭
+                        isUpdateSeekUI=false;
                         mProgressRoot.setVisibility(GONE);
                         mBottomRoot.setVisibility(GONE);
                         break;
@@ -134,11 +136,14 @@ public class VodController extends BaseController {
     Runnable myRunnable;
     int myHandleSeconds = 6000;//闲置多少毫秒秒关闭底栏  默认6秒
     private boolean isPaused = false;
+    private Context context=null;
+    private boolean isUpdateSeekUI=false;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
             Date date = new Date();
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+            //SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
             mPlayPauseTime.setText(timeFormat.format(date));
             String speed = PlayerHelper.getDisplaySpeed(mControlWrapper.getTcpSpeed());
             mPlayLoadNetSpeedRightTop.setText(speed);
@@ -232,14 +237,17 @@ public class VodController extends BaseController {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (!fromUser) {
+                long duration = mControlWrapper.getDuration();
+                //Toast.makeText(context, "fromUser:"+fromUser+",progress:"+progress+",seekBar:"+seekBar.getMax()+",duration:"+duration, Toast.LENGTH_SHORT).show();
+                if (!fromUser ||  isUpdateSeekUI) {
                     return;
                 }
 
-                long duration = mControlWrapper.getDuration();
+
                 long newPosition = (duration * progress) / seekBar.getMax();
-                if (mCurrentTime != null)
+                if (mCurrentTime != null) {
                     mCurrentTime.setText(stringForTime((int) newPosition));
+                }
             }
 
             @Override
@@ -693,6 +701,9 @@ public class VodController extends BaseController {
     @Override
     protected void updateSeekUI(int curr, int seekTo, int duration) {
         super.updateSeekUI(curr, seekTo, duration);
+        int max=mSeekBar.getMax();
+        //  long newPosition = (duration * progress) / seekBar.getMax();
+        int progress=(seekTo*max)/duration;
         if (seekTo > curr) {
             mProgressIcon.setImageResource(R.drawable.icon_pre);
         } else {
@@ -702,6 +713,11 @@ public class VodController extends BaseController {
         mHandler.sendEmptyMessage(1000);
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
+        mSeekBar.setProgress(progress);
+        if (mCurrentTime != null) {
+            mCurrentTime.setText(stringForTime(seekTo));
+        }
+        //Toast.makeText(context, "seekTo:"+seekTo+",progress:"+progress+",seekBarMax:"+max+",duration:"+duration, Toast.LENGTH_SHORT).show();
     }
 
     @Override
