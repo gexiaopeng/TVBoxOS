@@ -747,9 +747,6 @@ public class VodController extends BaseController {
         super.updateSeekUI(curr, seekTo, duration);
         int max=mSeekBar2.getMax();
         int progress=(int)((seekTo * 1.0 *max)/duration);
-        //long position = (duration * progress) /max;
-        //int pos = (int) (position * 1.0 / duration * max);
-        Toast.makeText(context, "seekTo:"+seekTo+",progress:"+progress+",seekBarMax:"+max+",duration:"+duration, Toast.LENGTH_SHORT).show();
         if (seekTo > curr) {
             mProgressIcon.setImageResource(R.drawable.icon_pre);
         } else {
