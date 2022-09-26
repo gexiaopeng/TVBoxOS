@@ -67,6 +67,7 @@ public class VodController extends BaseController {
                     }
                     case 1002: { // 显示底部菜单
                         mBottomRoot.setVisibility(VISIBLE);
+                        sToolBar.setVisibility(VISIBLE);
                         mTopRoot1.setVisibility(VISIBLE);
                         mTopRoot2.setVisibility(VISIBLE);
                         mPlayTitle.setVisibility(GONE);
@@ -111,6 +112,7 @@ public class VodController extends BaseController {
     LinearLayout mTopRoot2;
     LinearLayout mParseRoot;
     LinearLayout mToolBar;
+    LinearLayout sToolBar;
     TvRecyclerView mGridView;
     TextView mPlayTitle;
     TextView mPlayTitle1;
@@ -197,6 +199,7 @@ public class VodController extends BaseController {
         mZimuBtn = findViewById(R.id.zimu_select);
         mAudioTrackBtn = findViewById(R.id.audio_track_select);
         mToolBar=findViewById(R.id.my_tool_bar);
+        sToolBar=findViewById(R.id.tool_bar);
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
 
@@ -775,14 +778,14 @@ public class VodController extends BaseController {
             case VideoView.STATE_PLAYING:
                 isPaused=false;
                 startProgress();
-                hideBottom();//09-26
+                hideSeekBar();//09-26
                 break;
             case VideoView.STATE_PAUSED:
                 isPaused=true;
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
-                showBottom();//09-26
+                showSeekBar();//09-26
                 break;
             case VideoView.STATE_ERROR:
                 listener.errReplay();
@@ -807,7 +810,13 @@ public class VodController extends BaseController {
     boolean isBottomVisible() {
         return mBottomRoot.getVisibility() == VISIBLE;
     }
-
+    void showSeekBar(){
+        mBottomRoot.setVisibility(VISIBLE);
+        sToolBar.setVisibility(GONE);
+    }
+    void hideSeekBar(){
+        mBottomRoot.setVisibility(GONE);
+    }
     void showBottom() {
         mHandler.removeMessages(1003);
         mHandler.sendEmptyMessage(1002);
