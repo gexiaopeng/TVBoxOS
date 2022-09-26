@@ -50,16 +50,19 @@ import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
         super(context);
+        this.context=context;
         mHandlerCallback = new HandlerCallback() {
             @Override
             public void callback(Message msg) {
                 switch (msg.what) {
                     case 1000: { // seek 刷新
                         mProgressRoot.setVisibility(VISIBLE);
+                        mToolBar.setVisibility(VISIBLE);
                         break;
                     }
                     case 1001: { // seek 关闭
                         mProgressRoot.setVisibility(GONE);
+                        mToolBar.setVisibility(GONE);
                         break;
                     }
                     case 1002: { // 显示底部菜单
@@ -94,8 +97,11 @@ public class VodController extends BaseController {
     }
 
     SeekBar mSeekBar;
+    SeekBar mSeekBar2;
     TextView mCurrentTime;
     TextView mTotalTime;
+    TextView mCurrentTime2;
+    TextView mTotalTime2;
     boolean mIsDragging;
     LinearLayout mProgressRoot;
     TextView mProgressText;
@@ -104,6 +110,7 @@ public class VodController extends BaseController {
     LinearLayout mTopRoot1;
     LinearLayout mTopRoot2;
     LinearLayout mParseRoot;
+    LinearLayout mToolBar;
     TvRecyclerView mGridView;
     TextView mPlayTitle;
     TextView mPlayTitle1;
@@ -130,6 +137,7 @@ public class VodController extends BaseController {
     Runnable myRunnable;
     int myHandleSeconds = 6000;//闲置多少毫秒秒关闭底栏  默认6秒
     boolean isPaused=false;
+    private Context context=null;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -156,10 +164,13 @@ public class VodController extends BaseController {
         super.initView();
         mCurrentTime = findViewById(R.id.curr_time);
         mTotalTime = findViewById(R.id.total_time);
+        mCurrentTime2 = findViewById(R.id.curr_time2);
+        mTotalTime2 = findViewById(R.id.total_time2);
         mPlayTitle = findViewById(R.id.tv_info_name);
         mPlayTitle1 = findViewById(R.id.tv_info_name1);
         mPlayLoadNetSpeedRightTop = findViewById(R.id.tv_play_load_net_speed_right_top);
         mSeekBar = findViewById(R.id.seekBar);
+        mSeekBar2 = findViewById(R.id.seekBar2);
         mProgressRoot = findViewById(R.id.tv_progress_container);
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
@@ -185,7 +196,7 @@ public class VodController extends BaseController {
         mSubtitleView = findViewById(R.id.subtitle_view);
         mZimuBtn = findViewById(R.id.zimu_select);
         mAudioTrackBtn = findViewById(R.id.audio_track_select);
-
+        mToolBar=findViewById(R.id.my_tool_bar);
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
 
@@ -734,6 +745,11 @@ public class VodController extends BaseController {
     @Override
     protected void updateSeekUI(int curr, int seekTo, int duration) {
         super.updateSeekUI(curr, seekTo, duration);
+        int max=mSeekBar2.getMax();
+        int progress=(int)((seekTo * 1.0 *max)/duration);
+        //long position = (duration * progress) /max;
+        //int pos = (int) (position * 1.0 / duration * max);
+        Toast.makeText(context, "seekTo:"+seekTo+",progress:"+progress+",seekBarMax:"+max+",duration:"+duration, Toast.LENGTH_SHORT).show();
         if (seekTo > curr) {
             mProgressIcon.setImageResource(R.drawable.icon_pre);
         } else {
@@ -743,6 +759,14 @@ public class VodController extends BaseController {
         mHandler.sendEmptyMessage(1000);
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
+
+        mSeekBar2.setProgress(progress);
+        if (mCurrentTime2 != null) {
+            mCurrentTime2.setText(stringForTime(seekTo));
+        }
+        if (mTotalTime2 != null) {
+            mTotalTime2.setText(stringForTime(duration));
+        }
     }
 
     @Override
