@@ -778,14 +778,16 @@ public class VodController extends BaseController {
             case VideoView.STATE_PLAYING:
                 isPaused=false;
                 startProgress();
-                hideSeekBar();//09-26
+               // hideSeekBar();//09-26
+                hideBottom() ;
                 break;
             case VideoView.STATE_PAUSED:
                 isPaused=true;
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
-                showSeekBar();//09-26
+               // showSeekBar();//09-26
+                showBottom();
                 break;
             case VideoView.STATE_ERROR:
                 listener.errReplay();
