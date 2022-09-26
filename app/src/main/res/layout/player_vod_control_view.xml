@@ -574,10 +574,16 @@
         android:textColor="@color/color_FFFFFF"
         android:textSize="@dimen/ts_24" />
     <LinearLayout
-            android:id="@+id/my_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+    <LinearLayout
+            android:id="@+id/my_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -630,5 +636,22 @@
                 android:textSize="@dimen/ts_24"
                 android:focusable="false"
                 android:focusableInTouchMode="false"/>
+   </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/color_FFFFFF"
+                android:textSize="@dimen/ts_16"
+                android:focusable="false"
+                android:height="@dimen/vs_10"
+                android:focusableInTouchMode="false"/>
+    </LinearLayout>
     </LinearLayout>
 </FrameLayout>
