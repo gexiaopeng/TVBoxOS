@@ -207,7 +207,9 @@ public class VodController extends BaseController {
         myRunnable = new Runnable() {
             @Override
             public void run() {
-                hideBottom();
+                if(!isPaused){
+                  hideBottom();
+                }
             }
         };
 
