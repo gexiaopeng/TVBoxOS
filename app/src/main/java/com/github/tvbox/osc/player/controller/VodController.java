@@ -129,7 +129,7 @@ public class VodController extends BaseController {
     Handler myHandle;
     Runnable myRunnable;
     int myHandleSeconds = 6000;//闲置多少毫秒秒关闭底栏  默认6秒
-
+    boolean isPaused=false;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -273,7 +273,11 @@ public class VodController extends BaseController {
         mNextBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.playNext(false);
+                if (isPaused) {
+                    togglePlay();
+                } else {
+                    listener.playNext(false);
+                }
                 hideBottom();
             }
         });
@@ -748,12 +752,16 @@ public class VodController extends BaseController {
             case VideoView.STATE_IDLE:
                 break;
             case VideoView.STATE_PLAYING:
+                isPaused=false;
                 startProgress();
+                hideBottom();//09-26
                 break;
             case VideoView.STATE_PAUSED:
+                isPaused=true;
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
+                showBottom();//09-26
                 break;
             case VideoView.STATE_ERROR:
                 listener.errReplay();
