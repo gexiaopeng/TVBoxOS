@@ -6,7 +6,11 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -17,7 +21,6 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView;
-import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
@@ -38,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Date;
-import java.util.Locale;
 
 import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
@@ -48,27 +50,20 @@ import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
         super(context);
-        this.context=context;
         mHandlerCallback = new HandlerCallback() {
             @Override
             public void callback(Message msg) {
                 switch (msg.what) {
                     case 1000: { // seek 刷新
-                        isUpdateSeekUI=true;
                         mProgressRoot.setVisibility(VISIBLE);
-                        mBottomRoot.setVisibility(VISIBLE);
-                        mToolBar.setVisibility(GONE);
                         break;
                     }
                     case 1001: { // seek 关闭
-                        isUpdateSeekUI=false;
                         mProgressRoot.setVisibility(GONE);
-                        mBottomRoot.setVisibility(GONE);
                         break;
                     }
                     case 1002: { // 显示底部菜单
                         mBottomRoot.setVisibility(VISIBLE);
-                        mToolBar.setVisibility(VISIBLE);
                         mTopRoot1.setVisibility(VISIBLE);
                         mTopRoot2.setVisibility(VISIBLE);
                         mPlayTitle.setVisibility(GONE);
@@ -106,7 +101,6 @@ public class VodController extends BaseController {
     TextView mProgressText;
     ImageView mProgressIcon;
     LinearLayout mBottomRoot;
-    LinearLayout mToolBar;
     LinearLayout mTopRoot1;
     LinearLayout mTopRoot2;
     LinearLayout mParseRoot;
@@ -135,15 +129,12 @@ public class VodController extends BaseController {
     Handler myHandle;
     Runnable myRunnable;
     int myHandleSeconds = 6000;//闲置多少毫秒秒关闭底栏  默认6秒
-    private boolean isPaused = false;
-    private Context context=null;
-    private boolean isUpdateSeekUI=false;
+
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
             Date date = new Date();
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-            //SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
             mPlayPauseTime.setText(timeFormat.format(date));
             String speed = PlayerHelper.getDisplaySpeed(mControlWrapper.getTcpSpeed());
             mPlayLoadNetSpeedRightTop.setText(speed);
@@ -173,7 +164,6 @@ public class VodController extends BaseController {
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
         mBottomRoot = findViewById(R.id.bottom_container);
-        mToolBar=findViewById(R.id.tool_bar);
         mTopRoot1 = findViewById(R.id.tv_top_l_container);
         mTopRoot2 = findViewById(R.id.tv_top_r_container);
         mParseRoot = findViewById(R.id.parse_root);
@@ -237,17 +227,14 @@ public class VodController extends BaseController {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                long duration = mControlWrapper.getDuration();
-                //Toast.makeText(context, "fromUser:"+fromUser+",progress:"+progress+",seekBar:"+seekBar.getMax()+",duration:"+duration, Toast.LENGTH_SHORT).show();
-                if (!fromUser ||  isUpdateSeekUI) {
+                if (!fromUser) {
                     return;
                 }
 
-
+                long duration = mControlWrapper.getDuration();
                 long newPosition = (duration * progress) / seekBar.getMax();
-                if (mCurrentTime != null) {
+                if (mCurrentTime != null)
                     mCurrentTime.setText(stringForTime((int) newPosition));
-                }
             }
 
             @Override
@@ -286,11 +273,7 @@ public class VodController extends BaseController {
         mNextBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPaused) {
-                    togglePlay();
-                } else {
-                    listener.playNext(false);
-                }
+                listener.playNext(false);
                 hideBottom();
             }
         });
@@ -359,6 +342,38 @@ public class VodController extends BaseController {
             public void onClick(View view) {
 //                myHandle.removeCallbacks(myRunnable);
 //                myHandle.postDelayed(myRunnable, myHandleSeconds);
+                try {
+                    int playerType = mPlayerConfig.getInt("pl");
+                    ArrayList<Integer> exsitPlayerTypes = PlayerHelper.getExistPlayerTypes();
+                    int playerTypeIdx = 0;
+                    int playerTypeSize = exsitPlayerTypes.size();
+                    for(int i = 0; i<playerTypeSize; i++) {
+                        if (playerType == exsitPlayerTypes.get(i)) {
+                            if (i == playerTypeSize - 1) {
+                                playerTypeIdx = 0;
+                            } else {
+                                playerTypeIdx = i + 1;
+                            }
+                        }
+                    }
+                    playerType = exsitPlayerTypes.get(playerTypeIdx);
+                    mPlayerConfig.put("pl", playerType);
+                    updatePlayerCfgView();
+                    listener.updatePlayerCfg();
+                    listener.replay(false);
+//                    hideBottom();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mPlayerBtn.requestFocus();
+            }
+        });
+
+        mPlayerBtn.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+//                myHandle.removeCallbacks(myRunnable);
+//                myHandle.postDelayed(myRunnable, myHandleSeconds);
                 FastClickCheckUtil.check(view);
                 try {
                     int playerType = mPlayerConfig.getInt("pl");
@@ -412,6 +427,7 @@ public class VodController extends BaseController {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                return true;
             }
         });
         mPlayerIJKBtn.setOnClickListener(new OnClickListener() {
@@ -513,7 +529,6 @@ public class VodController extends BaseController {
                 }
             }
         });
-        // takagen99: Add long press to reset counter
         mPlayerTimeSkipBtn.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -547,6 +562,18 @@ public class VodController extends BaseController {
                 FastClickCheckUtil.check(view);
                 listener.selectSubtitle();
                 hideBottom();
+            }
+        });
+        mZimuBtn.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mSubtitleView.setVisibility(View.GONE);
+                mSubtitleView.destroy();
+                mSubtitleView.clearSubtitleCache();
+                mSubtitleView.isInternal = false;
+                hideBottom();
+                Toast.makeText(getContext(), "字幕已关闭", Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
         mAudioTrackBtn.setOnClickListener(new OnClickListener() {
@@ -609,6 +636,8 @@ public class VodController extends BaseController {
 
         void playPre();
 
+        void prepared();
+
         void changeParse(ParseBean pb);
 
         void updatePlayerCfg();
@@ -633,7 +662,7 @@ public class VodController extends BaseController {
     @Override
     protected void setProgress(int duration, int position) {
 
-        if (mIsDragging || isUpdateSeekUI) {
+        if (mIsDragging) {
             return;
         }
         super.setProgress(duration, position);
@@ -701,9 +730,6 @@ public class VodController extends BaseController {
     @Override
     protected void updateSeekUI(int curr, int seekTo, int duration) {
         super.updateSeekUI(curr, seekTo, duration);
-        int max=mSeekBar.getMax();
-        //  long newPosition = (duration * progress) / seekBar.getMax();
-        int progress=(seekTo*max)/duration;
         if (seekTo > curr) {
             mProgressIcon.setImageResource(R.drawable.icon_pre);
         } else {
@@ -713,11 +739,6 @@ public class VodController extends BaseController {
         mHandler.sendEmptyMessage(1000);
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
-        mSeekBar.setProgress(progress);
-        if (mCurrentTime != null) {
-            mCurrentTime.setText(stringForTime(seekTo));
-        }
-        //Toast.makeText(context, "seekTo:"+seekTo+",progress:"+progress+",seekBarMax:"+max+",duration:"+duration, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -727,21 +748,20 @@ public class VodController extends BaseController {
             case VideoView.STATE_IDLE:
                 break;
             case VideoView.STATE_PLAYING:
-                isPaused = false;
                 startProgress();
-                hideBottom();//09-22
                 break;
             case VideoView.STATE_PAUSED:
-                isPaused = true;
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
-                showBottom();//09-22
                 break;
             case VideoView.STATE_ERROR:
                 listener.errReplay();
                 break;
             case VideoView.STATE_PREPARED:
+                mPlayLoadNetSpeed.setVisibility(GONE);
+                listener.prepared();
+                break;
             case VideoView.STATE_BUFFERED:
                 mPlayLoadNetSpeed.setVisibility(GONE);
                 break;
@@ -791,7 +811,6 @@ public class VodController extends BaseController {
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
                 if (isInPlayback) {
                     togglePlay();
-                    //showBottom();
                     return true;
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
