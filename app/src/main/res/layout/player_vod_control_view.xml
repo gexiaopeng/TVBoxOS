@@ -574,15 +574,16 @@
         android:textColor="@color/color_FFFFFF"
         android:textSize="@dimen/ts_24" />
     <LinearLayout
+            android:id="@+id/my_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="vertical"
             android:focusable="false"
-            android:focusableInTouchMode="false">
+            android:focusableInTouchMode="false"
+            android:visibility="gone">
     <LinearLayout
-            android:id="@+id/my_tool_bar"
-            android:layout_width="match_parent"
+           android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:focusable="false"
@@ -591,7 +592,7 @@
             android:paddingTop="@dimen/vs_20"
             android:paddingRight="@dimen/vs_20"
             android:paddingBottom="@dimen/vs_10"
-            android:visibility="gone">
+            >
 
         <TextView
                 android:id="@+id/curr_time2"
