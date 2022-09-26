@@ -813,11 +813,17 @@ public class VodController extends BaseController {
         return mBottomRoot.getVisibility() == VISIBLE;
     }
     void showSeekBar(){
-        mBottomRoot.setVisibility(VISIBLE);
-        sToolBar.setVisibility(GONE);
+         mBottomRoot.setVisibility(VISIBLE);
+         //sToolBar.setVisibility(VISIBLE);
+         mTopRoot1.setVisibility(VISIBLE);
+         mTopRoot2.setVisibility(VISIBLE);
+         mPlayTitle.setVisibility(GONE);
+         mBottomRoot.requestFocus();
     }
     void hideSeekBar(){
         mBottomRoot.setVisibility(GONE);
+        mTopRoot1.setVisibility(GONE);
+        mTopRoot2.setVisibility(GONE);
     }
     void showBottom() {
         mHandler.removeMessages(1003);
