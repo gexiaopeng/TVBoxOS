@@ -816,11 +816,11 @@ public class VodController extends BaseController {
     }
     void showSeekBar(){
          mBottomRoot.setVisibility(VISIBLE);
-         //sToolBar.setVisibility(VISIBLE);
+         sToolBar.setVisibility(GONE);
          mTopRoot1.setVisibility(VISIBLE);
          mTopRoot2.setVisibility(VISIBLE);
          mPlayTitle.setVisibility(GONE);
-         mBottomRoot.requestFocus();
+        // mBottomRoot.requestFocus();
     }
     void hideSeekBar(){
         mBottomRoot.setVisibility(GONE);
@@ -845,6 +845,10 @@ public class VodController extends BaseController {
         }
         int keyCode = event.getKeyCode();
         int action = event.getAction();
+        if(action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && isPaused && isBottomVisible() && isInPlaybackState()){
+            togglePlay();
+            return true;
+        }
         if (isBottomVisible()) {
             myHandle.postDelayed(myRunnable, myHandleSeconds);
             return super.dispatchKeyEvent(event);
