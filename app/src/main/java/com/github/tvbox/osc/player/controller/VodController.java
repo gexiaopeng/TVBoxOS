@@ -58,11 +58,13 @@ public class VodController extends BaseController {
                     case 1000: { // seek 刷新
                         isUpdateSeekUI=true;
                         mProgressRoot.setVisibility(VISIBLE);
+                        //count++;
                        // mToolBar.setVisibility(VISIBLE);
                         showSeekBar();
                         break;
                     }
                     case 1001: { // seek 关闭
+                        count=0;
                         isUpdateSeekUI=false;
                         mProgressRoot.setVisibility(GONE);
                        // mToolBar.setVisibility(GONE);
@@ -145,6 +147,7 @@ public class VodController extends BaseController {
     boolean isPaused=false;
     private Context context=null;
     boolean isUpdateSeekUI=false;
+    int count=0;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -833,6 +836,7 @@ public class VodController extends BaseController {
          mBottomRoot.requestFocus();
     }
     void hideSeekBar(){
+        count=0;
         mBottomRoot.setVisibility(GONE);
         mTopRoot1.setVisibility(GONE);
         mTopRoot2.setVisibility(GONE);
@@ -843,25 +847,40 @@ public class VodController extends BaseController {
     }
 
     void hideBottom() {
+        count=0;
         mHandler.removeMessages(1002);
         mHandler.sendEmptyMessage(1003);
     }
 
     @Override
     public boolean onKeyEvent(KeyEvent event) {
+        count++;
+        //Toast.makeText(getContext(), "count:"+count+",a:"+event.getAction()+",c:"+event.getKeyCode(), Toast.LENGTH_SHORT).show();
         myHandle.removeCallbacks(myRunnable);
         if (super.onKeyEvent(event)) {
             return true;
         }
         int keyCode = event.getKeyCode();
         int action = event.getAction();
-        if (isBottomVisible()) {
+        if (keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_LEFT) {
+            count=0;
+        }
+        if (mBottomRoot.getVisibility() == VISIBLE && sToolBar.getVisibility() == VISIBLE) {
+            count=0;
             myHandle.postDelayed(myRunnable, myHandleSeconds);
-            //return super.dispatchKeyEvent(event);
+            return super.dispatchKeyEvent(event);
         }
         boolean isInPlayback = isInPlaybackState();
         if (action == KeyEvent.ACTION_DOWN) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                if(count==1){
+                    if (!isBottomVisible()) {
+                        showSeekBar();
+                        myHandle.removeCallbacks(myRunnable);
+                        myHandle.postDelayed(myRunnable, myHandleSeconds);
+                    }
+                    return true;
+                }
                 if (isInPlayback) {
                     tvSlideStart(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 1 : -1);
                     return true;
@@ -881,6 +900,9 @@ public class VodController extends BaseController {
             }
         } else if (action == KeyEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                if(count==2){
+                    return true;
+                }
                 if (isInPlayback) {
                     tvSlideStop();
                     return true;
