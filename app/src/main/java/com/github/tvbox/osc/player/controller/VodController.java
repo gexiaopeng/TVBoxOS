@@ -58,8 +58,7 @@ public class VodController extends BaseController {
                     case 1000: { // seek 刷新
                         isUpdateSeekUI=true;
                         mProgressRoot.setVisibility(VISIBLE);
-                        //count++;
-                       // mToolBar.setVisibility(VISIBLE);
+                        //mPlayTitle.setVisibility(GONE);
                         showSeekBar();
                         break;
                     }
@@ -67,7 +66,6 @@ public class VodController extends BaseController {
                         count=0;
                         isUpdateSeekUI=false;
                         mProgressRoot.setVisibility(GONE);
-                       // mToolBar.setVisibility(GONE);
                         hideSeekBar();
                         break;
                     }
@@ -104,11 +102,8 @@ public class VodController extends BaseController {
     }
 
     SeekBar mSeekBar;
-    SeekBar mSeekBar2;
     TextView mCurrentTime;
     TextView mTotalTime;
-    TextView mCurrentTime2;
-    TextView mTotalTime2;
     boolean mIsDragging;
     LinearLayout mProgressRoot;
     TextView mProgressText;
@@ -117,7 +112,6 @@ public class VodController extends BaseController {
     LinearLayout mTopRoot1;
     LinearLayout mTopRoot2;
     LinearLayout mParseRoot;
-    LinearLayout mToolBar;
     LinearLayout sToolBar;
     TvRecyclerView mGridView;
     TextView mPlayTitle;
@@ -174,13 +168,10 @@ public class VodController extends BaseController {
         super.initView();
         mCurrentTime = findViewById(R.id.curr_time);
         mTotalTime = findViewById(R.id.total_time);
-        mCurrentTime2 = findViewById(R.id.curr_time2);
-        mTotalTime2 = findViewById(R.id.total_time2);
         mPlayTitle = findViewById(R.id.tv_info_name);
         mPlayTitle1 = findViewById(R.id.tv_info_name1);
         mPlayLoadNetSpeedRightTop = findViewById(R.id.tv_play_load_net_speed_right_top);
         mSeekBar = findViewById(R.id.seekBar);
-        mSeekBar2 = findViewById(R.id.seekBar2);
         mProgressRoot = findViewById(R.id.tv_progress_container);
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
@@ -206,7 +197,6 @@ public class VodController extends BaseController {
         mSubtitleView = findViewById(R.id.subtitle_view);
         mZimuBtn = findViewById(R.id.zimu_select);
         mAudioTrackBtn = findViewById(R.id.audio_track_select);
-        mToolBar=findViewById(R.id.my_tool_bar);
         sToolBar=findViewById(R.id.tool_bar);
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
@@ -765,23 +755,22 @@ public class VodController extends BaseController {
         super.updateSeekUI(curr, seekTo, duration);
         int max=mSeekBar.getMax();
         int progress=(int)((seekTo * 1.0 *max)/duration);
+        String ps="";
+        int steep=0;
         if (seekTo > curr) {
             mProgressIcon.setImageResource(R.drawable.icon_pre);
+            ps="+";
+            steep=seekTo-curr;
         } else {
+            ps="-";
+            steep=curr-seekTo;
             mProgressIcon.setImageResource(R.drawable.icon_back);
         }
-        mProgressText.setText(PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
+        mProgressText.setText("("+ps+PlayerUtils.stringForTime(steep)+") "+PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
         mHandler.sendEmptyMessage(1000);
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
-
         mSeekBar.setProgress(progress);
-//        if (mCurrentTime2 != null) {
-//            mCurrentTime2.setText(stringForTime(seekTo));
-//        }
-//        if (mTotalTime2 != null) {
-//            mTotalTime2.setText(stringForTime(duration));
-//        }
     }
 
     @Override
