@@ -56,13 +56,17 @@ public class VodController extends BaseController {
             public void callback(Message msg) {
                 switch (msg.what) {
                     case 1000: { // seek 刷新
+                        isUpdateSeekUI=true;
                         mProgressRoot.setVisibility(VISIBLE);
-                        mToolBar.setVisibility(VISIBLE);
+                       // mToolBar.setVisibility(VISIBLE);
+                        showSeekBar();
                         break;
                     }
                     case 1001: { // seek 关闭
+                        isUpdateSeekUI=false;
                         mProgressRoot.setVisibility(GONE);
-                        mToolBar.setVisibility(GONE);
+                       // mToolBar.setVisibility(GONE);
+                        hideSeekBar();
                         break;
                     }
                     case 1002: { // 显示底部菜单
@@ -140,6 +144,7 @@ public class VodController extends BaseController {
     int myHandleSeconds = 6000;//闲置多少毫秒秒关闭底栏  默认6秒
     boolean isPaused=false;
     private Context context=null;
+    boolean isUpdateSeekUI=false;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -243,14 +248,16 @@ public class VodController extends BaseController {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (!fromUser) {
+                if (!fromUser && !isUpdateSeekUI) {
                     return;
                 }
-
                 long duration = mControlWrapper.getDuration();
                 long newPosition = (duration * progress) / seekBar.getMax();
-                if (mCurrentTime != null)
+                if (mCurrentTime != null) {
                     mCurrentTime.setText(stringForTime((int) newPosition));
+                }
+                mSeekBar.setProgress(progress);
+
             }
 
             @Override
@@ -682,7 +689,7 @@ public class VodController extends BaseController {
     @Override
     protected void setProgress(int duration, int position) {
 
-        if (mIsDragging) {
+        if (mIsDragging || isUpdateSeekUI) {
             return;
         }
         super.setProgress(duration, position);
@@ -750,7 +757,7 @@ public class VodController extends BaseController {
     @Override
     protected void updateSeekUI(int curr, int seekTo, int duration) {
         super.updateSeekUI(curr, seekTo, duration);
-        int max=mSeekBar2.getMax();
+        int max=mSeekBar.getMax();
         int progress=(int)((seekTo * 1.0 *max)/duration);
         if (seekTo > curr) {
             mProgressIcon.setImageResource(R.drawable.icon_pre);
@@ -762,13 +769,13 @@ public class VodController extends BaseController {
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
 
-        mSeekBar2.setProgress(progress);
-        if (mCurrentTime2 != null) {
-            mCurrentTime2.setText(stringForTime(seekTo));
-        }
-        if (mTotalTime2 != null) {
-            mTotalTime2.setText(stringForTime(duration));
-        }
+        mSeekBar.setProgress(progress);
+//        if (mCurrentTime2 != null) {
+//            mCurrentTime2.setText(stringForTime(seekTo));
+//        }
+//        if (mTotalTime2 != null) {
+//            mTotalTime2.setText(stringForTime(duration));
+//        }
     }
 
     @Override
@@ -846,12 +853,12 @@ public class VodController extends BaseController {
         int keyCode = event.getKeyCode();
         int action = event.getAction();
         if(action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && isPaused && isBottomVisible() && isInPlaybackState()){
-            togglePlay();
-            return true;
+            //togglePlay();
+           // return true;
         }
         if (isBottomVisible()) {
             myHandle.postDelayed(myRunnable, myHandleSeconds);
-            return super.dispatchKeyEvent(event);
+            //return super.dispatchKeyEvent(event);
         }
         boolean isInPlayback = isInPlaybackState();
         if (action == KeyEvent.ACTION_DOWN) {
