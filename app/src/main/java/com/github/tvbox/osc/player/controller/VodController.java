@@ -820,7 +820,7 @@ public class VodController extends BaseController {
          mTopRoot1.setVisibility(VISIBLE);
          mTopRoot2.setVisibility(VISIBLE);
          mPlayTitle.setVisibility(GONE);
-        // mBottomRoot.requestFocus();
+         mBottomRoot.requestFocus();
     }
     void hideSeekBar(){
         mBottomRoot.setVisibility(GONE);
