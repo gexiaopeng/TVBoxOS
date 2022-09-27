@@ -867,8 +867,6 @@ public class VodController extends BaseController {
                 if(count==1){
                     if (!isBottomVisible()) {
                         showSeekBar();
-                        myHandle.removeCallbacks(myRunnable);
-                        myHandle.postDelayed(myRunnable, myHandleSeconds);
                     }
                     return true;
                 }
@@ -892,6 +890,8 @@ public class VodController extends BaseController {
         } else if (action == KeyEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if(count==2){
+                    myHandle.removeCallbacks(myRunnable);
+                    myHandle.postDelayed(myRunnable, myHandleSeconds);
                     return true;
                 }
                 if (isInPlayback) {
