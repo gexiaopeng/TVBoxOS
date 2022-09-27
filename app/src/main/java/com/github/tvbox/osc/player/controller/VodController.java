@@ -6,6 +6,7 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -58,7 +59,7 @@ public class VodController extends BaseController {
                     case 1000: { // seek 刷新
                         isUpdateSeekUI=true;
                         mProgressRoot.setVisibility(VISIBLE);
-                        //mPlayTitle.setVisibility(GONE);
+                        mPauseRoot.setVisibility(GONE);
                         showSeekBar();
                         break;
                     }
@@ -134,7 +135,7 @@ public class VodController extends BaseController {
     public SimpleSubtitleView mSubtitleView;
     TextView mZimuBtn;
     TextView mAudioTrackBtn;
-
+    private ViewGroup mPauseRoot;
     Handler myHandle;
     Runnable myRunnable;
     int myHandleSeconds = 6000;//闲置多少毫秒秒关闭底栏  默认6秒
@@ -198,6 +199,7 @@ public class VodController extends BaseController {
         mZimuBtn = findViewById(R.id.zimu_select);
         mAudioTrackBtn = findViewById(R.id.audio_track_select);
         sToolBar=findViewById(R.id.tool_bar);
+        mPauseRoot = findViewWithTag("vod_control_pause");
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
 
