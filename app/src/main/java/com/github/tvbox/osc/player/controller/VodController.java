@@ -904,6 +904,7 @@ public class VodController extends BaseController {
         } else if (action == KeyEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if(count==2){
+                     isKeyOn=false;
                     myHandle.removeCallbacks(myRunnable);
                     myHandle.postDelayed(myRunnable, myHandleSeconds);
                     return true;
@@ -913,6 +914,7 @@ public class VodController extends BaseController {
                     return true;
                 }
             }
+            isKeyOn=false;
         }
         return super.dispatchKeyEvent(event);
     }
