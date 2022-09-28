@@ -383,10 +383,7 @@ public class VodController extends BaseController {
                         }
                     }
                     playerType = exsitPlayerTypes.get(playerTypeIdx);
-                    mPlayerConfig.put("pl", playerType);
-                    updatePlayerCfgView();
-                    listener.updatePlayerCfg();
-                    listener.replay(false);
+                    selectPlayType(playerType);
 //                    hideBottom();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -421,10 +418,7 @@ public class VodController extends BaseController {
                                 dialog.cancel();
                                 int thisPlayType = players.get(pos);
                                 if (thisPlayType != playerType) {
-                                    mPlayerConfig.put("pl", thisPlayType);
-                                    updatePlayerCfgView();
-                                    listener.updatePlayerCfg();
-                                    listener.replay(false);
+                                    selectPlayType(thisPlayType);
                                     mPlayerBtn.requestFocus();
 //                                  hideBottom();
                                 }
@@ -802,7 +796,16 @@ public class VodController extends BaseController {
                 //showBottom();
                 break;
             case VideoView.STATE_ERROR:
-                listener.errReplay();
+                int playerType =0;
+                try {
+                    mPlayerConfig.getInt("pl");
+                } catch (JSONException e) {
+                }
+                if(playerType!=1) {
+                    selectPlayType(1);
+                }else {
+                    listener.errReplay();
+                }
                 break;
             case VideoView.STATE_PREPARED:
                 mPlayLoadNetSpeed.setVisibility(GONE);
@@ -934,5 +937,15 @@ public class VodController extends BaseController {
             return true;
         }
         return false;
+    }
+    private void selectPlayType(int type){
+        try {
+            mPlayerConfig.put("pl", type);
+            updatePlayerCfgView();
+            listener.updatePlayerCfg();
+            listener.replay(false);
+        } catch (JSONException e) {
+
+        }
     }
 }
