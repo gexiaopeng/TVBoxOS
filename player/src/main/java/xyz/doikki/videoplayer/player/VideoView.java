@@ -331,8 +331,8 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
      */
     @Override
     public void pause() {
-        if (isInPlaybackState()
-                && mMediaPlayer.isPlaying()) {
+       // if (isInPlaybackState() && mMediaPlayer.isPlaying()) {
+        if (isInPlaybackState()) {
             mMediaPlayer.pause();
             setPlayState(STATE_PAUSED);
             if (mAudioFocusHelper != null && !isMute()) {
