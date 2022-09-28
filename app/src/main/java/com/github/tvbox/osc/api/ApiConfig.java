@@ -252,7 +252,10 @@ public class ApiConfig {
             sb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
-            if (firstSite == null && !siteKey.isEmpty()) {
+            if (firstSite == null && !siteKey.isEmpty() && !"csp_77".equalsIgnoreCase(siteKey)) {
+                firstSite = sb;
+            }
+            if (firstSite != null && "csp_CZSPP".equalsIgnoreCase(siteKey)) {
                 firstSite = sb;
             }
             if(!siteKey.isEmpty()) {
