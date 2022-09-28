@@ -35,7 +35,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/vs_320"
+                android:layout_height="@dimen/vs_360"
                 android:layout_marginStart="@dimen/vs_20"
                 android:layout_marginLeft="@dimen/vs_20"
                 android:orientation="vertical">
@@ -46,8 +46,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/vs_5"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:singleLine="true"
+                    android:maxLines="2"
+                    android:singleLine="false"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/ts_28" />
 

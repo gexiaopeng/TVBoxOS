@@ -7,7 +7,7 @@
 
         <LinearLayout
             android:id="@+id/tv_top_l_container"
-            android:layout_width="720dp"
+            android:layout_width="950dp"
             android:layout_height="match_parent"
             android:tag="tv_top_container"
             android:visibility="gone"
@@ -23,8 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:ellipsize="end"
-                android:singleLine="true"
-                android:width="680dp"
+                android:singleLine="false"
+                android:width="1280dp"
                 android:paddingTop="@dimen/vs_20"
                 android:paddingLeft="@dimen/vs_20"
                 android:text="http://"
