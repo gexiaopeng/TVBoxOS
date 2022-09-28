@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.player.controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -38,10 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.Date;
+import java.util.*;
 
 import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
@@ -52,6 +50,9 @@ public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
         super(context);
         this.context=context;
+        list.add(2);
+        list.add(1);
+        list.add(0);
         mHandlerCallback = new HandlerCallback() {
             @Override
             public void callback(Message msg) {
@@ -144,6 +145,7 @@ public class VodController extends BaseController {
     boolean isUpdateSeekUI=false;
     int count=0;
     boolean isKeyOn=false;
+    List<Integer> list=new ArrayList();
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -203,7 +205,6 @@ public class VodController extends BaseController {
         mPauseRoot = findViewWithTag("vod_control_pause");
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
-
         myHandle=new Handler();
         myRunnable = new Runnable() {
             @Override
@@ -798,11 +799,12 @@ public class VodController extends BaseController {
             case VideoView.STATE_ERROR:
                 int playerType =0;
                 try {
-                    mPlayerConfig.getInt("pl");
+                    playerType=playerType=mPlayerConfig.getInt("pl");
                 } catch (JSONException e) {
                 }
-                if(playerType!=1) {
-                    selectPlayType(1);
+                int rePlayTypeType=getRePlayType(playerType);
+                if(rePlayTypeType!=-1) {
+                    selectPlayType(rePlayTypeType);
                 }else {
                     listener.errReplay();
                 }
@@ -947,5 +949,19 @@ public class VodController extends BaseController {
         } catch (JSONException e) {
 
         }
+    }
+    private  int getRePlayType(int playType){
+        int newType=-1;
+        Iterator<Integer> iterator = list.iterator();
+        while (iterator.hasNext()){
+            int type = iterator.next();
+            if(playType==type){
+                iterator.remove();
+            }else if(newType==-1 && playType!=type){
+                newType=type;
+            }
+
+        }
+        return newType;
     }
 }
