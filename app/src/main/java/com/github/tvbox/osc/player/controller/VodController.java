@@ -773,10 +773,10 @@ public class VodController extends BaseController {
 
     @Override
     protected void onPlayStateChanged(int playState) {
-        if(playState==VideoView.STATE_ERROR){
+        if(playState==VideoView.STATE_ERROR && isPaused && !isKeyOn){
             //&& isPaused && !isKeyOn
-            Toast.makeText(getContext(), "isPlaying:"+mControlWrapper.isPlaying()+",pause:"+isPaused+",isKeyOn:"+isKeyOn, Toast.LENGTH_SHORT).show();
-            mControlWrapper.pause();
+            //Toast.makeText(getContext(), "isPlaying:"+mControlWrapper.isPlaying()+",pause:"+isPaused+",isKeyOn:"+isKeyOn, Toast.LENGTH_SHORT).show();
+            //mControlWrapper.pause();
             return;
         }
         super.onPlayStateChanged(playState);
@@ -890,8 +890,8 @@ public class VodController extends BaseController {
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
                 if(isPaused){
-                     //listener.replay(false);
-                     mControlWrapper.start();
+                     listener.replay(false);
+                     //mControlWrapper.start();
                      return true;
                 }
                 if (isInPlayback) {
