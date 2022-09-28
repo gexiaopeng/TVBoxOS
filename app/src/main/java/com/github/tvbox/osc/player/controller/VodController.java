@@ -143,6 +143,7 @@ public class VodController extends BaseController {
     private Context context=null;
     boolean isUpdateSeekUI=false;
     int count=0;
+    boolean isKeyOn=false;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -777,6 +778,10 @@ public class VodController extends BaseController {
 
     @Override
     protected void onPlayStateChanged(int playState) {
+        if(playState==VideoView.STATE_BUFFERING && isPaused && !isKeyOn){
+            mControlWrapper.pause();
+            return;
+        }
         super.onPlayStateChanged(playState);
         switch (playState) {
             case VideoView.STATE_IDLE:
@@ -813,6 +818,7 @@ public class VodController extends BaseController {
                 listener.playNext(true);
                 break;
         }
+        isKeyOn=false;
     }
 
     boolean isBottomVisible() {
@@ -845,6 +851,7 @@ public class VodController extends BaseController {
 
     @Override
     public boolean onKeyEvent(KeyEvent event) {
+        isKeyOn=true;
         count++;
         //Toast.makeText(getContext(), "count:"+count+",a:"+event.getAction()+",c:"+event.getKeyCode(), Toast.LENGTH_SHORT).show();
         myHandle.removeCallbacks(myRunnable);
