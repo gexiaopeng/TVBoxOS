@@ -890,7 +890,8 @@ public class VodController extends BaseController {
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
                 if(isPaused){
-                     listener.replay(false);
+                     //listener.replay(false);
+                     mControlWrapper.start();
                      return true;
                 }
                 if (isInPlayback) {
