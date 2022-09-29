@@ -168,7 +168,7 @@ public class PlayFragment extends BaseLazyFragment {
             @Override
             public void playNext(boolean rmProgress) {
                 String preProgressKey = progressKey;
-                PlayFragment.this.playNext();
+                PlayFragment.this.playNext(rmProgress);
                 if (rmProgress && preProgressKey != null)
                     CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
             }
@@ -310,10 +310,10 @@ public class PlayFragment extends BaseLazyFragment {
     void setSubtitleViewTextStyle(int style) {
         if (style == 0) {
             mController.mSubtitleView.setTextColor(getContext().getResources().getColorStateList(R.color.color_FFFFFF));
-            mController.mSubtitleView.setShadowLayer(2, 1, 1, R.color.color_CC000000);
+            mController.mSubtitleView.setShadowLayer(3, 2, 2, R.color.color_CC000000);
         } else if (style == 1) {
             mController.mSubtitleView.setTextColor(getContext().getResources().getColorStateList(R.color.color_FFB6C1));
-            mController.mSubtitleView.setShadowLayer(2, 1, 1, R.color.color_FFFFFF);
+            mController.mSubtitleView.setShadowLayer(3, 2, 2, R.color.color_FFFFFF);
         }
     }
 
@@ -729,7 +729,7 @@ public class PlayFragment extends BaseLazyFragment {
     private String sourceKey;
     private SourceBean sourceBean;
 
-    private void playNext() {
+    private void playNext(boolean isProgress) {
         boolean hasNext = true;
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasNext = false;
@@ -737,10 +737,16 @@ public class PlayFragment extends BaseLazyFragment {
             hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
         }
         if (!hasNext) {
-            Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
-            return;
+            if(isProgress && mVodInfo!=null){
+                mVodInfo.playIndex=0;
+                Toast.makeText(requireContext(), "已经是最后一集了!,即将跳到第一集继续播放", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }else {
+            mVodInfo.playIndex++;
         }
-        mVodInfo.playIndex++;
         play(false);
     }
 
@@ -773,6 +779,7 @@ public class PlayFragment extends BaseLazyFragment {
     }
 
     public void play(boolean reset) {
+        if(mVodInfo==null)return;
         VodInfo.VodSeries vs = mVodInfo.seriesMap.get(mVodInfo.playFlag).get(mVodInfo.playIndex);
         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_REFRESH, mVodInfo.playIndex));
         setTip("正在获取播放信息", true, false);
@@ -781,8 +788,8 @@ public class PlayFragment extends BaseLazyFragment {
 
         stopParse();
         if(mVideoView!=null) mVideoView.release();
-        String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex + "-subt";
-        String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex;
+        String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex+ "-" + vs.name + "-subt";
+        String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex + vs.name;
         //重新播放清除现有进度
         if (reset) {
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
@@ -1226,12 +1233,20 @@ public class PlayFragment extends BaseLazyFragment {
     }
 
     boolean checkVideoFormat(String url) {
-        if (sourceBean.getType() == 3) {
-            Spider sp = ApiConfig.get().getCSP(sourceBean);
-            if (sp != null && sp.manualVideoCheck())
-                return sp.isVideoFormat(url);
+        try{
+            if (sourceBean.getType() == 3) {
+                if (url.contains("=http") || url.contains(".html")) {
+                    return false;
+                }
+                Spider sp = ApiConfig.get().getCSP(sourceBean);
+                if (sp != null && sp.manualVideoCheck()){
+                    return sp.isVideoFormat(url);
+                }
+            }
+            return DefaultConfig.isVideoFormat(url);
+        }catch (Exception e){
+            return false;
         }
-        return DefaultConfig.isVideoFormat(url);
     }
 
     class MyWebView extends WebView {
@@ -1358,9 +1373,9 @@ public class PlayFragment extends BaseLazyFragment {
         }
 
         WebResourceResponse checkIsVideo(String url, HashMap<String, String> headers) {
-//            if (url.endsWith("/favicon.ico")) {
-//                return new WebResourceResponse("image/png", null, null);
-//            }
+            if (url.endsWith("/favicon.ico")) {
+                return null;
+            }
             LOG.i("shouldInterceptRequest url:" + url);
             boolean ad;
             if (!loadedUrls.containsKey(url)) {
@@ -1379,6 +1394,7 @@ public class PlayFragment extends BaseLazyFragment {
                     } else {
                         playUrl(url, null);
                     }
+                    mController.setUrlTitle("视频地址："+url);
                     stopLoadWebView(false);
                 }
             }
@@ -1531,9 +1547,9 @@ public class PlayFragment extends BaseLazyFragment {
         public XWalkWebResourceResponse shouldInterceptLoadRequest(XWalkView view, XWalkWebResourceRequest request) {
             String url = request.getUrl().toString();
             // suppress favicon requests as we don't display them anywhere
-//            if (url.endsWith("/favicon.ico")) {
-//                return createXWalkWebResourceResponse("image/png", null, null);
-//            }
+            if (url.endsWith("/favicon.ico")) {
+                return null;
+            }
             LOG.i("shouldInterceptLoadRequest url:" + url);
             boolean ad;
             if (!loadedUrls.containsKey(url)) {
@@ -1564,6 +1580,7 @@ public class PlayFragment extends BaseLazyFragment {
                     } else {
                         playUrl(url, null);
                     }
+                    mController.setUrlTitle("视频地址："+url);
                     stopLoadWebView(false);
                 }
             }
