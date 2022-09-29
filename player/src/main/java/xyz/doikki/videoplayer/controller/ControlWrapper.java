@@ -26,6 +26,11 @@ public class ControlWrapper implements MediaPlayerControl, IVideoController {
     }
 
     @Override
+    public void startOnError() {
+        mPlayerControl.startOnError();
+    }
+
+    @Override
     public void pause() {
         mPlayerControl.pause();
     }

@@ -774,9 +774,7 @@ public class VodController extends BaseController {
     @Override
     protected void onPlayStateChanged(int playState) {
         if(playState==VideoView.STATE_ERROR && isPaused && !isKeyOn){
-            //&& isPaused && !isKeyOn
-            //Toast.makeText(getContext(), "isPlaying:"+mControlWrapper.isPlaying()+",pause:"+isPaused+",isKeyOn:"+isKeyOn, Toast.LENGTH_SHORT).show();
-            //mControlWrapper.pause();
+             //Toast.makeText(getContext(), "isPlaying:"+mControlWrapper.isPlaying()+",pause:"+isPaused+",isKeyOn:"+isKeyOn, Toast.LENGTH_SHORT).show();
             return;
         }
         super.onPlayStateChanged(playState);
@@ -873,6 +871,7 @@ public class VodController extends BaseController {
         if (mBottomRoot.getVisibility() == VISIBLE && sToolBar.getVisibility() == VISIBLE) {
             count=0;
             myHandle.postDelayed(myRunnable, myHandleSeconds);
+            isKeyOn=false;
             return super.dispatchKeyEvent(event);
         }
         boolean isInPlayback = isInPlaybackState();
@@ -889,13 +888,14 @@ public class VodController extends BaseController {
                     return true;
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
-                if(isPaused){
-                     listener.replay(false);
-                     //mControlWrapper.start();
-                     return true;
-                }
-                if (isInPlayback) {
+               if (isInPlayback) {
                     togglePlay();
+                    return true;
+                }else if(isPaused){
+                    mControlWrapper.startOnError();
+                    //listener.replay(false);
+                   // hideSeekBar();
+                    isPaused=false;
                     return true;
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
@@ -916,6 +916,7 @@ public class VodController extends BaseController {
                 }
                 if (isInPlayback) {
                     tvSlideStop();
+                    isKeyOn=false;
                     return true;
                 }
             }

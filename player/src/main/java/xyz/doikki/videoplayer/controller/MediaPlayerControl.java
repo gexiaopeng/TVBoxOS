@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 public interface MediaPlayerControl {
 
     void start();
-
+    void startOnError();
     void pause();
 
     long getDuration();

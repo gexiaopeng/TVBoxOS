@@ -189,6 +189,11 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
         }
     }
 
+    @Override
+    public void startOnError() {
+        startInPlaybackState();
+    }
+
     /**
      * 第一次播放
      *
@@ -331,8 +336,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
      */
     @Override
     public void pause() {
-       // if (isInPlaybackState() && mMediaPlayer.isPlaying()) {
-        if (isInPlaybackState()) {
+        if (isInPlaybackState() && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
             setPlayState(STATE_PAUSED);
             if (mAudioFocusHelper != null && !isMute()) {
