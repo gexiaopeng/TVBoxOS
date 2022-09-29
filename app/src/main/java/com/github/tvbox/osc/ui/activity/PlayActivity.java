@@ -729,9 +729,10 @@ public class PlayActivity extends BaseActivity {
             if(mVodInfo!=null && isProgress){
                 mVodInfo.playIndex=0;
                 Toast.makeText(this, "已经是最后一集了!,即将跳到第一集继续播放", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "已经是最后一集了!", Toast.LENGTH_SHORT).show();
+                return;
             }
-            Toast.makeText(this, "已经是最后一集了!", Toast.LENGTH_SHORT).show();
-            return;
         }else {
             mVodInfo.playIndex++;
         }
