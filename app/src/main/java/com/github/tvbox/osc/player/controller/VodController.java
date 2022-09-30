@@ -896,10 +896,9 @@ public class VodController extends BaseController {
                     togglePlay();
                     return true;
                 }else if(isPaused){
-                    mControlWrapper.startOnError();
-                    //listener.replay(false);
-                   // hideSeekBar();
                     isPaused=false;
+                    hideSeekBar();
+                    listener.replay(false);
                     return true;
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
