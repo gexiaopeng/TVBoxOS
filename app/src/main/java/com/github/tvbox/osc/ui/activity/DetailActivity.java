@@ -764,6 +764,7 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        Toast.makeText(DetailActivity.this, "-onBackPressed-:"+fullWindows, Toast.LENGTH_SHORT).show();
         if (fullWindows) {
             if (playFragment.onBackPressed())
                 return;

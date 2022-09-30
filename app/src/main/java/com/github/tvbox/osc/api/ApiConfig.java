@@ -80,8 +80,8 @@ public class ApiConfig {
     }
 
     public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
-        // String apiUrl = Hawk.get(HawkConfig.API_URL, "https://gitcode.net/qq_26898231/TVBox/-/raw/main/tv.json"); //normal
-        String apiUrl = Hawk.get(HawkConfig.API_URL, "https://gitcode.net/q284855646/diy/-/raw/root/tv.json");//normal
+        String apiUrl = Hawk.get(HawkConfig.API_URL, "https://gitcode.net/q284855646/diy/-/raw/root/tv.json");
+        //String apiUrl = Hawk.get(HawkConfig.API_URL, "clan://localhost/Pictures/0709/0709.json");//normal
         if (apiUrl.isEmpty()) {
             callback.error("-1");
             return;
@@ -125,7 +125,7 @@ public class ApiConfig {
                             callback.success();
                         } catch (Throwable th) {
                             th.printStackTrace();
-                            callback.error("解析配置失败");
+                            callback.error("解析配置失败:"+th.getMessage());
                         }
                     }
 

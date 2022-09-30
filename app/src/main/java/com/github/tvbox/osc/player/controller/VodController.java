@@ -777,7 +777,7 @@ public class VodController extends BaseController {
 
     @Override
     protected void onPlayStateChanged(int playState) {
-        if(playState==VideoView.STATE_ERROR && isPaused && !isKeyOn){
+        if(((playState==VideoView.STATE_ERROR && isPaused) || playState==VideoView.STATE_PAUSED) && !isKeyOn){
              //Toast.makeText(getContext(), "isPlaying:"+mControlWrapper.isPlaying()+",pause:"+isPaused+",isKeyOn:"+isKeyOn, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -861,9 +861,10 @@ public class VodController extends BaseController {
     @Override
     public boolean onKeyEvent(KeyEvent event) {
         isKeyOn=true;
+
         count++;
-        //Toast.makeText(getContext(), "count:"+count+",a:"+event.getAction()+",c:"+event.getKeyCode(), Toast.LENGTH_SHORT).show();
         myHandle.removeCallbacks(myRunnable);
+        //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode(), Toast.LENGTH_SHORT).show();
         if (super.onKeyEvent(event)) {
             return true;
         }
@@ -940,13 +941,12 @@ public class VodController extends BaseController {
         }
         return true;
     }
-
     @Override
     public boolean onBackPressed() {
         if (super.onBackPressed()) {
             return true;
         }
-        if (isBottomVisible()) {
+        if (isBottomVisible() && !isPaused) {
             hideBottom();
             return true;
         }
