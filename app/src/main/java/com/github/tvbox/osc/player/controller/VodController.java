@@ -255,7 +255,7 @@ public class VodController extends BaseController {
                     mCurrentTime.setText(stringForTime((int) newPosition));
                 }
                 if (mTotalTime!= null) {
-                    mTotalTime.setText(stringForTime((int)(duration-newPosition))+"/"+stringForTime((int) duration));
+                    mTotalTime.setText("-"+stringForTime((int)(duration-newPosition))+"/"+stringForTime((int) duration));
                 }
                 mSeekBar.setProgress(progress);
 
@@ -705,7 +705,7 @@ public class VodController extends BaseController {
             }
         }
         mCurrentTime.setText(PlayerUtils.stringForTime(position));
-        mTotalTime.setText(PlayerUtils.stringForTime(duration-position)+"/"+PlayerUtils.stringForTime(duration));
+        mTotalTime.setText("-"+PlayerUtils.stringForTime(duration-position)+"/"+PlayerUtils.stringForTime(duration));
         if (duration > 0) {
             mSeekBar.setEnabled(true);
             int pos = (int) (position * 1.0 / duration * mSeekBar.getMax());
