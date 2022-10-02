@@ -739,16 +739,10 @@ public class PlayFragment extends BaseLazyFragment {
             hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
         }
         if (!hasNext) {
-            if(isProgress && mVodInfo!=null){
-                mVodInfo.playIndex=0;
-                Toast.makeText(requireContext(), "已经是最后一集了!,即将跳到第一集继续播放", Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }else {
-            mVodInfo.playIndex++;
-        }
+            Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
+            return;
+       }
+        mVodInfo.playIndex++;
         play(false);
     }
 
