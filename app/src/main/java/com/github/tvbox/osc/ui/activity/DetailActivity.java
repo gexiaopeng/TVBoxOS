@@ -764,14 +764,15 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(DetailActivity.this, "-onBackPressed-:"+fullWindows, Toast.LENGTH_SHORT).show();
-        if (fullWindows) {
+       if (fullWindows) {
             if (playFragment.onBackPressed())
                 return;
             toggleFullPreview();
             mGridView.requestFocus();
             return;
-        }
+        }else{
+           playFragment.previewBackPress();
+       }
         if (seriesSelect) {
             if (seriesFlagFocus != null && !seriesFlagFocus.isFocused()) {
                 seriesFlagFocus.requestFocus();

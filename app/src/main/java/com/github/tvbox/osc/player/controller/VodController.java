@@ -146,6 +146,7 @@ public class VodController extends BaseController {
     int count=0;
     boolean isKeyOn=false;
     List<Integer> list=new ArrayList();
+    boolean isPreviewBack=false;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -777,7 +778,7 @@ public class VodController extends BaseController {
 
     @Override
     protected void onPlayStateChanged(int playState) {
-        if(((playState==VideoView.STATE_ERROR && isPaused) || playState==VideoView.STATE_PAUSED) && !isKeyOn){
+        if((playState==VideoView.STATE_ERROR && isPaused && !isKeyOn) ||  (playState==VideoView.STATE_PAUSED && isPreviewBack)){
              //Toast.makeText(getContext(), "isPlaying:"+mControlWrapper.isPlaying()+",pause:"+isPaused+",isKeyOn:"+isKeyOn, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -951,6 +952,9 @@ public class VodController extends BaseController {
             return true;
         }
         return false;
+    }
+    public void previewBackPress(){
+        this.isPreviewBack=true;
     }
     private void selectPlayType(int type){
         try {

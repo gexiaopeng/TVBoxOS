@@ -673,7 +673,9 @@ public class PlayFragment extends BaseLazyFragment {
         }
         return false;
     }
-
+    public void previewBackPress(){
+        mController.previewBackPress();
+    }
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event != null) {
             if (mController.onKeyEvent(event)) {
