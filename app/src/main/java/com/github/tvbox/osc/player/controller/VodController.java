@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.player.controller;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +30,7 @@ import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.PlayerHelper;
+import com.github.tvbox.osc.util.ScreenUtils;
 import com.github.tvbox.osc.util.SubtitleHelper;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -122,14 +124,16 @@ public class VodController extends BaseController {
     TextView mNextBtn;
     TextView mPreBtn;
     TextView mPlayerScaleBtn;
-    TextView mPlayerSpeedBtn;
+    public TextView mPlayerSpeedBtn;
     TextView mPlayerBtn;
     TextView mPlayerIJKBtn;
     TextView mPlayerRetry;
     TextView mPlayrefresh;
-    TextView mPlayerTimeStartBtn;
-    TextView mPlayerTimeSkipBtn;
-    TextView mPlayerTimeStepBtn;
+    public TextView mPlayerTimeStartEndText;
+    public TextView mPlayerTimeStartBtn;
+    public TextView mPlayerTimeSkipBtn;
+    public TextView mPlayerTimeStepBtn;
+    public TextView mPlayerTimeResetBtn;
     TextView mPlayPauseTime;
     TextView mPlayLoadNetSpeed;
     TextView mVideoSize;
@@ -137,6 +141,8 @@ public class VodController extends BaseController {
     TextView mZimuBtn;
     TextView mAudioTrackBtn;
     private ViewGroup mPauseRoot;
+    public TextView mLandscapePortraitBtn;
+
     Handler myHandle;
     Runnable myRunnable;
     int myHandleSeconds = 6000;//闲置多少毫秒秒关闭底栏  默认6秒
@@ -193,9 +199,11 @@ public class VodController extends BaseController {
         mPlayerSpeedBtn = findViewById(R.id.play_speed);
         mPlayerBtn = findViewById(R.id.play_player);
         mPlayerIJKBtn = findViewById(R.id.play_ijk);
+        mPlayerTimeStartEndText = findViewById(R.id.play_time_start_end_text);
         mPlayerTimeStartBtn = findViewById(R.id.play_time_start);
         mPlayerTimeSkipBtn = findViewById(R.id.play_time_end);
         mPlayerTimeStepBtn = findViewById(R.id.play_time_step);
+        mPlayerTimeResetBtn = findViewById(R.id.play_time_reset);
         mPlayPauseTime = findViewById(R.id.tv_sys_time);
         mPlayLoadNetSpeed = findViewById(R.id.tv_play_load_net_speed);
         mVideoSize = findViewById(R.id.tv_videosize);
@@ -207,6 +215,11 @@ public class VodController extends BaseController {
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
         myHandle=new Handler();
+        mLandscapePortraitBtn = findViewById(R.id.landscape_portrait);
+
+        initSubtitleInfo();
+
+        myHandle = new Handler();
         myRunnable = new Runnable() {
             @Override
             public void run() {
@@ -482,7 +495,7 @@ public class VodController extends BaseController {
             }
         });
 //        增加播放页面片头片尾时间重置
-        findViewById(R.id.play_time_reset).setOnClickListener(new OnClickListener() {
+        mPlayerTimeResetBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 myHandle.removeCallbacks(myRunnable);
@@ -606,6 +619,39 @@ public class VodController extends BaseController {
                 hideBottom();
             }
         });
+        mLandscapePortraitBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FastClickCheckUtil.check(view);
+                setLandscapePortrait();
+                hideBottom();
+            }
+        });
+        initLandscapePortraitBtnInfo();
+    }
+
+    void initLandscapePortraitBtnInfo() {
+        double screenSqrt = ScreenUtils.getSqrt(mActivity);
+        if (screenSqrt < 20.0) {
+            mLandscapePortraitBtn.setVisibility(View.VISIBLE);
+            mLandscapePortraitBtn.setText("竖屏");
+        }
+    }
+
+    void setLandscapePortrait() {
+        int requestedOrientation = mActivity.getRequestedOrientation();
+        if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
+            mLandscapePortraitBtn.setText("横屏");
+            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        } else if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
+            mLandscapePortraitBtn.setText("竖屏");
+            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
+    }
+
+    void initSubtitleInfo() {
+        int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
+        mSubtitleView.setTextSize(subtitleTextSize);
     }
 
     @Override
