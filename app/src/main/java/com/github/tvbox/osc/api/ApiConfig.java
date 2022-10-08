@@ -24,10 +24,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
+import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.orhanobut.hawk.Hawk;
 
 import org.json.JSONObject;
+import xyz.doikki.videoplayer.util.PlayerUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,7 +69,10 @@ public class ApiConfig {
         sourceBeanList = new LinkedHashMap<>();
         liveChannelGroupList = new ArrayList<>();
         parseBeanList = new ArrayList<>();
-    }
+        HttpHeaders commonHeaders=new HttpHeaders();
+        commonHeaders.put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36");
+        OkGo.getInstance().init(PlayerUtils.getApplication()).addCommonHeaders(commonHeaders);
+   }
 
     public static ApiConfig get() {
         if (instance == null) {
@@ -80,7 +86,7 @@ public class ApiConfig {
     }
 
     public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
-        String apiUrl = Hawk.get(HawkConfig.API_URL, "https://gitcode.net/q284855646/diy/-/raw/root/tv.json");
+        String apiUrl = Hawk.get(HawkConfig.API_URL, "http://gitcode.net/gexiaopeng72/mytvbox/-/raw/master/bc.json");
         //String apiUrl = Hawk.get(HawkConfig.API_URL, "clan://localhost/Pictures/0709/0709.json");//normal
         if (apiUrl.isEmpty()) {
             callback.error("-1");
@@ -104,6 +110,10 @@ public class ApiConfig {
         }
         OkGo.<String>get(apiFix)
                 .execute(new AbsCallback<String>() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                    }
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
@@ -180,7 +190,10 @@ public class ApiConfig {
         }
 
         OkGo.<File>get(jarUrl).execute(new AbsCallback<File>() {
-
+            @Override
+            public void onStart(Request<File, ? extends Request> request) {
+                super.onStart(request);
+            }
             @Override
             public File convertResponse(okhttp3.Response response) throws Throwable {
                 File cacheDir = cache.getParentFile();
