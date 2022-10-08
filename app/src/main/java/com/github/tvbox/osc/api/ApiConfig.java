@@ -69,9 +69,6 @@ public class ApiConfig {
         sourceBeanList = new LinkedHashMap<>();
         liveChannelGroupList = new ArrayList<>();
         parseBeanList = new ArrayList<>();
-        HttpHeaders commonHeaders=new HttpHeaders();
-        commonHeaders.put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36");
-        OkGo.getInstance().init(PlayerUtils.getApplication()).addCommonHeaders(commonHeaders);
    }
 
     public static ApiConfig get() {
