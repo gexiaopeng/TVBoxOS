@@ -265,7 +265,7 @@ public class ApiConfig {
             if (firstSite == null && !siteKey.isEmpty() && !"csp_77".equalsIgnoreCase(siteKey)) {
                 firstSite = sb;
             }
-            if (firstSite != null && "csp_CZSPP".equalsIgnoreCase(siteKey)) {
+            if (firstSite != null && "csp_Kuaikan".equalsIgnoreCase(siteKey)) {
                 firstSite = sb;
             }
             if(!siteKey.isEmpty()) {
