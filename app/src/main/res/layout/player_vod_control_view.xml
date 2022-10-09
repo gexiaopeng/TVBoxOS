@@ -123,13 +123,17 @@
         <HorizontalScrollView
             android:scrollbars="none"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center">
             <LinearLayout
                 android:id="@+id/tool_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/vs_10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center">
 
                 <TextView
                     android:singleLine="true"
@@ -140,7 +144,9 @@
                     android:paddingRight="@dimen/vs_10"
                     android:text="播放"
                     android:textColor="@color/color_FFFFFF"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone"
+                />
 
                 <TextView
                     android:id="@+id/play_next"

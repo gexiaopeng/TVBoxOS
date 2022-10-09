@@ -633,7 +633,7 @@ public class VodController extends BaseController {
     void initLandscapePortraitBtnInfo() {
         double screenSqrt = ScreenUtils.getSqrt(mActivity);
         if (screenSqrt < 20.0) {
-            mLandscapePortraitBtn.setVisibility(View.VISIBLE);
+            //mLandscapePortraitBtn.setVisibility(View.VISIBLE);
             mLandscapePortraitBtn.setText("竖屏");
         }
     }
