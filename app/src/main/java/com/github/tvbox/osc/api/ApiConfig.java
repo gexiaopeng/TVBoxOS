@@ -286,10 +286,11 @@ public class ApiConfig {
             JsonObject obj = (JsonObject) opt;
             SourceBean sb = new SourceBean();
             String siteKey = obj.get("key").getAsString().trim();
+            String api=obj.get("api").getAsString().trim();
             sb.setKey(siteKey);
             sb.setName(obj.get("name").getAsString().trim());
             sb.setType(obj.get("type").getAsInt());
-            sb.setApi(obj.get("api").getAsString().trim());
+            sb.setApi(api);
             sb.setSearchable(DefaultConfig.safeJsonInt(obj, "searchable", 1));
             sb.setQuickSearch(DefaultConfig.safeJsonInt(obj, "quickSearch", 1));
             sb.setFilterable(DefaultConfig.safeJsonInt(obj, "filterable", 1));
@@ -305,7 +306,7 @@ public class ApiConfig {
             if (firstSite == null && !siteKey.isEmpty() && !"csp_77".equalsIgnoreCase(siteKey)) {
                 firstSite = sb;
             }
-            if (firstSite != null && "csp_Kuaikan".equalsIgnoreCase(siteKey)) {
+            if (firstSite != null && ("csp_Kuaikan".equalsIgnoreCase(siteKey) || "csp_Kuaikan".equalsIgnoreCase(api))) {
                 firstSite = sb;
             }
             if(!siteKey.isEmpty()) {
