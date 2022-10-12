@@ -113,7 +113,7 @@ public class ApiConfig {
     }
 
     public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
-        String apiUrl = Hawk.get(HawkConfig.API_URL, "http://gitcode.net/gexiaopeng72/mytvbox/-/raw/master/bc.json");
+        String apiUrl = Hawk.get(HawkConfig.API_URL, "https://gitee.com/ge-xiaopeng/mytest/raw/master/tvbox/0709.json");
         if (apiUrl.isEmpty()) {
             callback.error("-1");
             return;
