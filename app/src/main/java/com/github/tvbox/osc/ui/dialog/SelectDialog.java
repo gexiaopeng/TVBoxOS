@@ -1,12 +1,16 @@
 package com.github.tvbox.osc.ui.dialog;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DiffUtil;
 
+import androidx.recyclerview.widget.RecyclerView;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -42,9 +46,19 @@ public class SelectDialog<T> extends BaseDialog {
         tvRecyclerView.setAdapter(adapter);
         tvRecyclerView.setSelectedPosition(select);
         tvRecyclerView.post(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void run() {
-                tvRecyclerView.smoothScrollToPosition(select);
+                tvRecyclerView.scrollToPosition(select);
+                tvRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if(newState==RecyclerView.SCROLL_STATE_IDLE){
+                            tvRecyclerView.requestFocus(select);
+                        }
+                    }
+                });
             }
         });
     }
