@@ -26,13 +26,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
-import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
 import com.orhanobut.hawk.Hawk;
 
 import org.json.JSONObject;
-import xyz.doikki.videoplayer.util.PlayerUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,6 +63,7 @@ public class ApiConfig {
 
     private JarLoader jarLoader = new JarLoader();
 
+    private String userAgent = "okhttp/3.15";
 
     private String requestAccept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
 
@@ -74,6 +72,18 @@ public class ApiConfig {
         liveChannelGroupList = new ArrayList<>();
         parseBeanList = new ArrayList<>();
     }
+
+    public static ApiConfig get() {
+        if (instance == null) {
+            synchronized (ApiConfig.class) {
+                if (instance == null) {
+                    instance = new ApiConfig();
+                }
+            }
+        }
+        return instance;
+    }
+
     public static String FindResult(String json, String configKey) {
         try {
             String content = "";
@@ -100,16 +110,6 @@ public class ApiConfig {
             e.printStackTrace();
         }
         return json;
-    }
-    public static ApiConfig get() {
-        if (instance == null) {
-            synchronized (ApiConfig.class) {
-                if (instance == null) {
-                    instance = new ApiConfig();
-                }
-            }
-        }
-        return instance;
     }
 
     public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
@@ -143,7 +143,7 @@ public class ApiConfig {
         }
         String configKey = TempKey;
         OkGo.<String>get(configUrl)
-                //.headers("User-Agent", userAgent)
+                .headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
                 .execute(new AbsCallback<String>() {
                     @Override
@@ -223,43 +223,43 @@ public class ApiConfig {
         }
 
         OkGo.<File>get(jarUrl)
-                //.headers("User-Agent", userAgent)
+                .headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
                 .execute(new AbsCallback<File>() {
 
-            @Override
-            public File convertResponse(okhttp3.Response response) throws Throwable {
-                File cacheDir = cache.getParentFile();
-                if (!cacheDir.exists())
-                    cacheDir.mkdirs();
-                if (cache.exists())
-                    cache.delete();
-                FileOutputStream fos = new FileOutputStream(cache);
-                fos.write(response.body().bytes());
-                fos.flush();
-                fos.close();
-                return cache;
-            }
+                    @Override
+                    public File convertResponse(okhttp3.Response response) throws Throwable {
+                        File cacheDir = cache.getParentFile();
+                        if (!cacheDir.exists())
+                            cacheDir.mkdirs();
+                        if (cache.exists())
+                            cache.delete();
+                        FileOutputStream fos = new FileOutputStream(cache);
+                        fos.write(response.body().bytes());
+                        fos.flush();
+                        fos.close();
+                        return cache;
+                    }
 
-            @Override
-            public void onSuccess(Response<File> response) {
-                if (response.body().exists()) {
-                    if (jarLoader.load(response.body().getAbsolutePath())) {
-                        callback.success();
-                    } else {
+                    @Override
+                    public void onSuccess(Response<File> response) {
+                        if (response.body().exists()) {
+                            if (jarLoader.load(response.body().getAbsolutePath())) {
+                                callback.success();
+                            } else {
+                                callback.error("");
+                            }
+                        } else {
+                            callback.error("");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<File> response) {
+                        super.onError(response);
                         callback.error("");
                     }
-                } else {
-                    callback.error("");
-                }
-            }
-
-            @Override
-            public void onError(Response<File> response) {
-                super.onError(response);
-                callback.error("");
-            }
-        });
+                });
     }
 
     private void parseJson(String apiUrl, File f) throws Throwable {
@@ -303,6 +303,7 @@ public class ApiConfig {
             sb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
+            sb.setClickSelector(DefaultConfig.safeJsonString(obj, "click", ""));
             if (firstSite == null && !siteKey.isEmpty() && !"csp_77".equalsIgnoreCase(siteKey)) {
                 firstSite = sb;
             }
