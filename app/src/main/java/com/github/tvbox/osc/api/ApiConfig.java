@@ -14,6 +14,7 @@ import com.github.tvbox.osc.bean.LiveChannelItem;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.server.ControlManager;
+import com.github.tvbox.osc.util.AES;
 import com.github.tvbox.osc.util.AdBlocker;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -87,7 +88,6 @@ public class ApiConfig {
 
     public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
         String apiUrl = Hawk.get(HawkConfig.API_URL, "http://gitcode.net/gexiaopeng72/mytvbox/-/raw/master/bc.json");
-        //String apiUrl = Hawk.get(HawkConfig.API_URL, "clan://localhost/Pictures/0709/0709.json");//normal
         if (apiUrl.isEmpty()) {
             callback.error("-1");
             return;
@@ -102,20 +102,30 @@ public class ApiConfig {
                 th.printStackTrace();
             }
         }
-        String apiFix = apiUrl;
-        if (apiUrl.startsWith("clan://")) {
-            apiFix = clanToAddress(apiUrl);
-        }else if(!apiUrl.startsWith("http")){
-            apiFix = "http://" + apiFix;
+        String TempKey = null, configUrl = "", pk = ";pk;";
+        if (apiUrl.contains(pk)) {
+            String[] a = apiUrl.split(pk);
+            TempKey = a[1];
+            if (apiUrl.startsWith("clan")) configUrl = clanToAddress(a[0]);
+            if (apiUrl.startsWith("http")) configUrl = a[0];
+        } else if (apiUrl.startsWith("clan") && !apiUrl.contains(pk)) {
+            configUrl = clanToAddress(apiUrl);
+        } else if (!apiUrl.startsWith("http") && !apiUrl.contains(pk)) {
+            configUrl = "http://" + configUrl;
+        } else {
+            configUrl = apiUrl;
         }
-        OkGo.<String>get(apiFix)
-               .headers("Accept", requestAccept)
+        String configKey = TempKey;
+        OkGo.<String>get(configUrl)
+                //.headers("User-Agent", userAgent)
+                .headers("Accept", requestAccept)
                 .execute(new AbsCallback<String>() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String json = response.body();
-                            parseJson(apiUrl, response.body());
+                            json = FindResult(json, configKey);
+                            parseJson(apiUrl, json);
                             try {
                                 File cacheDir = cache.getParentFile();
                                 if (!cacheDir.exists())
@@ -187,6 +197,7 @@ public class ApiConfig {
         }
 
         OkGo.<File>get(jarUrl)
+                //.headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
                 .execute(new AbsCallback<File>() {
 
@@ -257,7 +268,11 @@ public class ApiConfig {
             sb.setQuickSearch(DefaultConfig.safeJsonInt(obj, "quickSearch", 1));
             sb.setFilterable(DefaultConfig.safeJsonInt(obj, "filterable", 1));
             sb.setPlayerUrl(DefaultConfig.safeJsonString(obj, "playUrl", ""));
-            sb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
+            if(obj.has("ext") && (obj.get("ext").isJsonArray() || obj.get("ext").isJsonObject())){
+                sb.setExt(obj.get("ext").toString());
+            }else {
+                sb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
+            }
             sb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
