@@ -3,12 +3,13 @@ package com.github.tvbox.osc.player.controller;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -24,6 +25,7 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView;
+import com.github.tvbox.osc.ui.activity.PlayActivity;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
@@ -52,6 +54,8 @@ public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
         super(context);
         this.context=context;
+        thumbView = LayoutInflater.from(this.context).inflate(R.layout.item_seekbar_time, null, false);
+        mTimeBar.setThumb(getThumb(0));
         list.add(2);
         list.add(1);
         list.add(0);
@@ -105,8 +109,18 @@ public class VodController extends BaseController {
             }
         };
     }
-
+    public Drawable getThumb(int position) {
+        ((TextView) thumbView.findViewById(R.id.tvProgress)).setText(stringForTime(position));
+        thumbView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        Bitmap bitmap = Bitmap.createBitmap(thumbView.getMeasuredWidth(), thumbView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        thumbView.layout(0, 0, thumbView.getMeasuredWidth(), thumbView.getMeasuredHeight());
+        thumbView.draw(canvas);
+       return new BitmapDrawable(getResources(), bitmap);
+    }
     SeekBar mSeekBar;
+    SeekBar mTimeBar;
+    View thumbView;
     TextView mCurrentTime;
     TextView mTotalTime;
     boolean mIsDragging;
@@ -185,6 +199,7 @@ public class VodController extends BaseController {
         mPlayTitle1 = findViewById(R.id.tv_info_name1);
         mPlayLoadNetSpeedRightTop = findViewById(R.id.tv_play_load_net_speed_right_top);
         mSeekBar = findViewById(R.id.seekBar);
+        mTimeBar = findViewById(R.id.timeBar);
         mProgressRoot = findViewById(R.id.tv_progress_container);
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
@@ -274,7 +289,8 @@ public class VodController extends BaseController {
                     mTotalTime.setText("-"+stringForTime((int)(duration-newPosition))+"/"+stringForTime((int) duration));
                 }
                 mSeekBar.setProgress(progress);
-
+                mTimeBar.setProgress(progress);
+                mTimeBar.setThumb(getThumb((int)(duration-newPosition)));
             }
 
             @Override
@@ -759,7 +775,9 @@ public class VodController extends BaseController {
             mSeekBar.setEnabled(true);
             int pos = (int) (position * 1.0 / duration * mSeekBar.getMax());
             mSeekBar.setProgress(pos);
-        } else {
+            mTimeBar.setProgress(pos);
+            mTimeBar.setThumb(getThumb(position));
+         } else {
             mSeekBar.setEnabled(false);
         }
         int percent = mControlWrapper.getBufferedPercentage();
@@ -823,6 +841,9 @@ public class VodController extends BaseController {
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
         mSeekBar.setProgress(progress);
+        mTimeBar.setProgress(progress);
+        mTimeBar.setThumb(getThumb(seekTo));
+
     }
 
     @Override
