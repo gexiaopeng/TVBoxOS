@@ -61,7 +61,7 @@ public class VodController extends BaseController {
                 switch (msg.what) {
                     case 1000: { // seek 刷新
                         isUpdateSeekUI=true;
-                        mProgressRoot.setVisibility(VISIBLE);
+                        //mProgressRoot.setVisibility(VISIBLE);
                         mPauseRoot.setVisibility(GONE);
                         showSeekBar();
                         break;
@@ -74,6 +74,7 @@ public class VodController extends BaseController {
                         break;
                     }
                     case 1002: { // 显示底部菜单
+                        mMyseekBar.setVisibility(GONE);
                         mBottomRoot.setVisibility(VISIBLE);
                         sToolBar.setVisibility(VISIBLE);
                         mTopRoot1.setVisibility(VISIBLE);
@@ -117,6 +118,7 @@ public class VodController extends BaseController {
     LinearLayout mTopRoot2;
     LinearLayout mParseRoot;
     LinearLayout sToolBar;
+    LinearLayout mMyseekBar;
     TvRecyclerView mGridView;
     TextView mPlayTitle;
     TextView mPlayTitle1;
@@ -211,6 +213,7 @@ public class VodController extends BaseController {
         mZimuBtn = findViewById(R.id.zimu_select);
         mAudioTrackBtn = findViewById(R.id.audio_track_select);
         sToolBar=findViewById(R.id.tool_bar);
+        mMyseekBar=findViewById(R.id.myseekBar);
         mPauseRoot = findViewWithTag("vod_control_pause");
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
@@ -254,7 +257,7 @@ public class VodController extends BaseController {
         mGridView.setAdapter(parseAdapter);
         parseAdapter.setNewData(ApiConfig.get().getParseBeanList());
 
-        mParseRoot.setVisibility(VISIBLE);
+        //mParseRoot.setVisibility(VISIBLE);
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -660,7 +663,7 @@ public class VodController extends BaseController {
     }
 
     public void showParse(boolean userJxList) {
-        mParseRoot.setVisibility(userJxList ? VISIBLE : GONE);
+        //mParseRoot.setVisibility(userJxList ? VISIBLE : GONE);
     }
 
     private JSONObject mPlayerConfig = null;
@@ -868,7 +871,7 @@ public class VodController extends BaseController {
                 break;
             case VideoView.STATE_PREPARING:
             case VideoView.STATE_BUFFERING:
-                if(mProgressRoot.getVisibility()==GONE)mPlayLoadNetSpeed.setVisibility(VISIBLE);
+                //if(mProgressRoot.getVisibility()==GONE)mPlayLoadNetSpeed.setVisibility(VISIBLE);
                 break;
             case VideoView.STATE_PLAYBACK_COMPLETED:
                 listener.playNext(true);
@@ -881,6 +884,7 @@ public class VodController extends BaseController {
         return mBottomRoot.getVisibility() == VISIBLE;
     }
     void showSeekBar(){
+         mMyseekBar.setVisibility(VISIBLE);
          mBottomRoot.setVisibility(VISIBLE);
          sToolBar.setVisibility(GONE);
          mTopRoot1.setVisibility(VISIBLE);
