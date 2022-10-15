@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId 'com.github.tvbox.osc'
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 26
         versionCode 1
         versionName '1.0.0'
         multiDexEnabled true
@@ -34,13 +34,6 @@ android {
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled true
-            /**
-            applicationVariants.all{
-                variant->variant.outputs.all{
-                  outputFileName = "TVBoxOS-${defaultConfig.versionName}.apk"
-                }
-            }
-             **/
 
             ndk {
                 abiFilters 'armeabi-v7a'
