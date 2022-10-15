@@ -245,11 +245,11 @@ public class PlayActivity extends BaseActivity {
             mController.mPlayerTimeResetBtn.setVisibility(View.GONE);
         }else {
             mController.mPlayerSpeedBtn.setVisibility(View.VISIBLE);
-            mController.mPlayerTimeStartEndText.setVisibility(View.VISIBLE);
-            mController.mPlayerTimeStartBtn.setVisibility(View.VISIBLE);
-            mController.mPlayerTimeSkipBtn.setVisibility(View.VISIBLE);
-            mController.mPlayerTimeStepBtn.setVisibility(View.VISIBLE);
-            mController.mPlayerTimeResetBtn.setVisibility(View.VISIBLE);
+           // mController.mPlayerTimeStartEndText.setVisibility(View.VISIBLE);
+            //mController.mPlayerTimeStartBtn.setVisibility(View.VISIBLE);
+            //mController.mPlayerTimeSkipBtn.setVisibility(View.VISIBLE);
+            //mController.mPlayerTimeStepBtn.setVisibility(View.VISIBLE);
+            //mController.mPlayerTimeResetBtn.setVisibility(View.VISIBLE);
         }
     }
 

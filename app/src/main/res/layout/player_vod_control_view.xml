@@ -270,7 +270,8 @@
                     android:padding="@dimen/vs_10"
                     android:text="片头片尾"
                     android:textColor="@color/color_FFFFFF"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/play_time_start"
@@ -284,7 +285,8 @@
                     android:padding="@dimen/vs_10"
                     android:text="01:00"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/play_time_end"
@@ -298,7 +300,8 @@
                     android:padding="@dimen/vs_10"
                     android:text="01:00"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/play_time_step"
@@ -312,7 +315,8 @@
                     android:padding="@dimen/vs_10"
                     android:text="1S"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone"/>
 
                 <!--添加片头片尾重置按钮-->
                 <TextView
@@ -327,7 +331,8 @@
                     android:padding="@dimen/vs_10"
                     android:text="重置"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/zimu_select"
