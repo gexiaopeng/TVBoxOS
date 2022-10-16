@@ -216,7 +216,8 @@
                     android:padding="@dimen/vs_10"
                     android:text="16:9"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/play_speed"
@@ -346,7 +347,8 @@
                     android:padding="@dimen/vs_10"
                     android:text="字幕"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_20"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/audio_track_select"
@@ -466,8 +468,8 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:max="1000"
-                    android:maxHeight="@dimen/vs_6"
-                    android:minHeight="@dimen/vs_6"
+                    android:maxHeight="@dimen/vs_8"
+                    android:minHeight="@dimen/vs_8"
                     android:padding="@dimen/vs_0"
                     android:paddingStart="@dimen/vs_0"
                     android:paddingEnd="@dimen/vs_0"

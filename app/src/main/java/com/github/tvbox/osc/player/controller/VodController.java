@@ -57,8 +57,8 @@ public class VodController extends BaseController {
         thumbView = LayoutInflater.from(this.context).inflate(R.layout.item_seekbar_time, null, false);
         mTimeBar.setThumb(getThumb(0));
         list.add(2);
-        list.add(1);
         list.add(0);
+        list.add(1);
         mHandlerCallback = new HandlerCallback() {
             @Override
             public void callback(Message msg) {
@@ -84,6 +84,7 @@ public class VodController extends BaseController {
                         mTopRoot2.setVisibility(VISIBLE);
                         mPlayTitle.setVisibility(GONE);
                         mBottomRoot.requestFocus();
+                        mNextBtn.requestFocus();
                         break;
                     }
                     case 1003: { // 隐藏底部菜单
@@ -199,6 +200,7 @@ public class VodController extends BaseController {
         mPlayLoadNetSpeedRightTop = findViewById(R.id.tv_play_load_net_speed_right_top);
         mSeekBar = findViewById(R.id.seekBar);
         mTimeBar = findViewById(R.id.timeBar);
+        mTimeBar.setEnabled(false);
         mProgressRoot = findViewById(R.id.tv_progress_container);
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
