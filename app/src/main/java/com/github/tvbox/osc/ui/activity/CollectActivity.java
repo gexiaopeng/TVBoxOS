@@ -131,6 +131,16 @@ public class CollectActivity extends BaseActivity {
                 }
             }
         });
+        collectAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                FastClickCheckUtil.check(view);
+                VodCollect vodInfo = collectAdapter.getData().get(position);
+                collectAdapter.remove(position);
+                RoomDataManger.deleteVodCollect(vodInfo.getId());
+                return true;
+            }
+        });
     }
 
     private void initData() {
