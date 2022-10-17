@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.base.BaseActivity;
@@ -32,6 +33,7 @@ import java.util.List;
  */
 public class HistoryActivity extends BaseActivity {
     private TextView tvDel;
+    private TextView tvDelAll;
     private TextView tvDelTip;
     private TvRecyclerView mGridView;
     private HistoryAdapter historyAdapter;
@@ -57,6 +59,7 @@ public class HistoryActivity extends BaseActivity {
     private void initView() {
         EventBus.getDefault().register(this);
         tvDel = findViewById(R.id.tvDel);
+        tvDelAll = findViewById(R.id.tvDelAll);
         tvDelTip = findViewById(R.id.tvDelTip);
         mGridView = findViewById(R.id.mGridView);
         mGridView.setHasFixedSize(true);
@@ -69,11 +72,23 @@ public class HistoryActivity extends BaseActivity {
                 toggleDelMode();
             }
         });
+        tvDelAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VodInfo vodInfo=null;
+                while(historyAdapter.getItemCount()>0){
+                    vodInfo = historyAdapter.getData().get(0);
+                    historyAdapter.remove(0);
+                    RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+                }
+            }
+        });
         mGridView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
             @Override
             public boolean onInBorderKeyEvent(int direction, View focused) {
                 if (direction == View.FOCUS_UP) {
                     tvDel.setFocusable(true);
+                    tvDelAll.setFocusable(true);
                     tvDel.requestFocus();
                 }
                 return false;
