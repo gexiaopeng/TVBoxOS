@@ -778,6 +778,9 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        if(playFragment!=null) {
+            playFragment.previewBackPress();
+        }
        if (fullWindows) {
             if (playFragment.onBackPressed())
                 return;
@@ -785,7 +788,9 @@ public class DetailActivity extends BaseActivity {
             mGridView.requestFocus();
             return;
         }else{
-           playFragment.previewBackPress();
+           if(playFragment!=null) {
+              // playFragment.previewBackPress();
+           }
        }
         if (seriesSelect) {
             if (seriesFlagFocus != null && !seriesFlagFocus.isFocused()) {

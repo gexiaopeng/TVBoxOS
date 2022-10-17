@@ -849,7 +849,8 @@ public class VodController extends BaseController {
 
     @Override
     protected void onPlayStateChanged(int playState) {
-        if((playState==VideoView.STATE_ERROR && isPaused && !isKeyOn) ||  (playState==VideoView.STATE_PAUSED && isPreviewBack)){
+       // Toast.makeText(getContext(), "playState:"+playState+",isPreviewBack:"+isPreviewBack+",isKeyOn:"+isKeyOn+",isPaused:"+isPaused, Toast.LENGTH_LONG).show();
+        if((playState==VideoView.STATE_ERROR && isPaused && !isKeyOn) ||  (playState==VideoView.STATE_PAUSED && (isPreviewBack || !isKeyOn))){
              //Toast.makeText(getContext(), "isPlaying:"+mControlWrapper.isPlaying()+",pause:"+isPaused+",isKeyOn:"+isKeyOn, Toast.LENGTH_SHORT).show();
             return;
         }
