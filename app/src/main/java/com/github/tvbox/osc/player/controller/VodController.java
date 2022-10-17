@@ -83,7 +83,7 @@ public class VodController extends BaseController {
                         mTopRoot1.setVisibility(VISIBLE);
                         mTopRoot2.setVisibility(VISIBLE);
                         mPlayTitle.setVisibility(GONE);
-                        mBottomRoot.requestFocus();
+                       // mBottomRoot.requestFocus();
                         mNextBtn.requestFocus();
                         break;
                     }
@@ -934,7 +934,6 @@ public class VodController extends BaseController {
     @Override
     public boolean onKeyEvent(KeyEvent event) {
         isKeyOn=true;
-
         count++;
         myHandle.removeCallbacks(myRunnable);
         //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode(), Toast.LENGTH_SHORT).show();
@@ -980,14 +979,16 @@ public class VodController extends BaseController {
                 if (!isBottomVisible()) {
                     showBottom();
                     myHandle.postDelayed(myRunnable, myHandleSeconds);
-                    return true;
+                }else{
+                    hideBottom();
                 }
+                return true;
+
             }
         } else if (action == KeyEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if(count==2){
                      isKeyOn=false;
-                    myHandle.removeCallbacks(myRunnable);
                     myHandle.postDelayed(myRunnable, myHandleSeconds);
                     return true;
                 }
