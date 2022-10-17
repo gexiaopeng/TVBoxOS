@@ -18,5 +18,5 @@ public abstract class ProgressManager {
      * @return 保存的播放进度
      */
     public abstract long getSavedProgress(String url);
-
+    public abstract void deleteProgress();
 }

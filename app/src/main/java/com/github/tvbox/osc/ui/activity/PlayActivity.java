@@ -114,7 +114,7 @@ public class PlayActivity extends BaseActivity {
     private Handler mHandler;
 
     private long videoDuration = -1;
-
+    private ProgressManager progressManager;
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_play;
@@ -148,9 +148,11 @@ public class PlayActivity extends BaseActivity {
         mController.setCanChangePosition(true);
         mController.setEnableInNormal(true);
         mController.setGestureEnabled(true);
-        ProgressManager progressManager = new ProgressManager() {
+        progressManager = new ProgressManager() {
+            private String key;
             @Override
             public void saveProgress(String url, long progress) {
+                this.key=url;
                 if (videoDuration ==0) return;
                 CacheManager.save(MD5.string2MD5(url), progress);
             }
@@ -171,6 +173,12 @@ public class PlayActivity extends BaseActivity {
                 if (rec < skip)
                     return skip;
                 return rec;
+            }
+            @Override
+            public void deleteProgress(){
+                if(this.key!=null){
+                    CacheManager.delete(MD5.string2MD5(key),0);
+                }
             }
         };
         mVideoView.setProgressManager(progressManager);
@@ -829,6 +837,7 @@ public class PlayActivity extends BaseActivity {
         String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex + vs.name;
         //重新播放清除现有进度
         if (reset) {
+            progressManager.deleteProgress();
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
             CacheManager.delete(MD5.string2MD5(subtitleCacheKey), 0);
         }
