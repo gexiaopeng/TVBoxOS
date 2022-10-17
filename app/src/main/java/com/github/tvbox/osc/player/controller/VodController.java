@@ -1025,6 +1025,7 @@ public class VodController extends BaseController {
         }
         if (isBottomVisible() && !isPaused) {
             hideBottom();
+            this.isPreviewBack=false;
             return true;
         }
         return false;
