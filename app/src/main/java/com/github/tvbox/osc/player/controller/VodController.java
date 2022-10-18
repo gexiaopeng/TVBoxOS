@@ -334,11 +334,11 @@ public class VodController extends BaseController {
         mNextBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPaused) {
-                    togglePlay();
-                } else {
-                    listener.playNext(false);
-                }
+//                if (isPaused) {
+//                    togglePlay();
+//                } else {
+                listener.playNext(false);
+                //}
                 hideBottom();
             }
         });
