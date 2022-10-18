@@ -947,7 +947,7 @@ public class VodController extends BaseController {
         count++;
         myHandle.removeCallbacks(myRunnable);
 
-        //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",r:"+isToolBarVisible(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+"b:"+(mBottomRoot.getVisibility() == VISIBLE ), Toast.LENGTH_LONG).show();
         if (super.onKeyEvent(event)) {
             return true;
         }
