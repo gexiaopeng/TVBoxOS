@@ -946,11 +946,10 @@ public class VodController extends BaseController {
         isKeyOn=true;
         count++;
         myHandle.removeCallbacks(myRunnable);
-
-        Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+"b:"+(mBottomRoot.getVisibility() == VISIBLE ), Toast.LENGTH_LONG).show();
         if (super.onKeyEvent(event)) {
             return true;
         }
+        Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+",b:"+(mBottomRoot.getVisibility() == VISIBLE ), Toast.LENGTH_LONG).show();
         int keyCode = event.getKeyCode();
         isPreviewBack=(keyCode==KeyEvent.KEYCODE_BACK);
         int action = event.getAction();
