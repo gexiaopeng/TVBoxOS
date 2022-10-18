@@ -448,10 +448,14 @@ public class ApiConfig {
         for (JsonElement groupElement : livesArray) {
             LiveChannelGroup liveChannelGroup = new LiveChannelGroup();
             liveChannelGroup.setLiveChannels(new ArrayList<LiveChannelItem>());
-            liveChannelGroup.setGroupIndex(groupIndex++);
             String groupName = ((JsonObject) groupElement).get("group").getAsString().trim();
             String[] splitGroupName = groupName.split("_", 2);
-            liveChannelGroup.setGroupName(splitGroupName[0]);
+            String gName=splitGroupName[0];
+            if(gName==null || gName.length()==0 || gName.indexOf("声明")!=-1 || gName.indexOf("维护")!=-1){
+                continue;
+            }
+            liveChannelGroup.setGroupIndex(groupIndex++);
+            liveChannelGroup.setGroupName(gName);
             if (splitGroupName.length > 1)
                 liveChannelGroup.setGroupPassword(splitGroupName[1]);
             else
