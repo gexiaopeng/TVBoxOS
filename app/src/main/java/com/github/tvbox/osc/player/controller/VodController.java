@@ -904,7 +904,9 @@ public class VodController extends BaseController {
         isPreviewBack=false;
         isKeyOn=false;
     }
-
+    boolean isToolBarVisible() {
+       return sToolBar.getVisibility()==VISIBLE;
+    }
     boolean isBottomVisible() {
         return mBottomRoot.getVisibility() == VISIBLE;
     }
@@ -939,7 +941,7 @@ public class VodController extends BaseController {
         isKeyOn=true;
         count++;
         myHandle.removeCallbacks(myRunnable);
-        //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode(), Toast.LENGTH_LONG).show();
         if (super.onKeyEvent(event)) {
             return true;
         }
@@ -979,11 +981,9 @@ public class VodController extends BaseController {
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode== KeyEvent.KEYCODE_MENU) {
-                if (!isBottomVisible()) {
+                if (!isToolBarVisible()) {
                     showBottom();
                     myHandle.postDelayed(myRunnable, myHandleSeconds);
-                }else{
-                    hideBottom();
                 }
                 return true;
 
@@ -1020,12 +1020,20 @@ public class VodController extends BaseController {
     }
     @Override
     public boolean onBackPressed() {
+        this.isPreviewBack=false;
         if (super.onBackPressed()) {
             return true;
         }
-        if (isBottomVisible() && !isPaused) {
+        if(isPaused){
+            if(sToolBar.getVisibility()==VISIBLE){
+                sToolBar.setVisibility(GONE);
+                return true;
+            }else if (isInPlaybackState()) {
+                togglePlay();
+                return true;
+            }
+        }else if (isBottomVisible() && !isPaused) {
             hideBottom();
-            this.isPreviewBack=false;
             return true;
         }
         return false;

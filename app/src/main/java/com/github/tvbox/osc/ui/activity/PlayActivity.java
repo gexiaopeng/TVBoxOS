@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
@@ -705,7 +706,11 @@ public class PlayActivity extends BaseActivity {
         }
         mController.setPlayerConfig(mVodPlayerCfg);
     }
-
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //event.getAction()
+        return super.onTouchEvent(event);
+    }
     @Override
     public void onBackPressed() {
         if (mController.onBackPressed()) {
