@@ -778,9 +778,6 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(playFragment!=null) {
-            playFragment.previewBackPress();
-        }
        if (fullWindows) {
             if (playFragment.onBackPressed())
                 return;
@@ -789,7 +786,7 @@ public class DetailActivity extends BaseActivity {
             return;
         }else{
            if(playFragment!=null) {
-              // playFragment.previewBackPress();
+               playFragment.previewBackPress();
            }
        }
         if (seriesSelect) {

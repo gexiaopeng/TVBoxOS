@@ -707,11 +707,6 @@ public class PlayActivity extends BaseActivity {
         mController.setPlayerConfig(mVodPlayerCfg);
     }
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        //event.getAction()
-        return super.onTouchEvent(event);
-    }
-    @Override
     public void onBackPressed() {
         if (mController.onBackPressed()) {
             return;

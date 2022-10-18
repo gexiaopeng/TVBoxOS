@@ -85,6 +85,7 @@ public class VodController extends BaseController {
                         mPlayTitle.setVisibility(GONE);
                        // mBottomRoot.requestFocus();
                         mNextBtn.requestFocus();
+                        //Toast.makeText(context,"1002:"+(sToolBar.getVisibility()==VISIBLE),Toast.LENGTH_LONG).show();
                         break;
                     }
                     case 1003: { // 隐藏底部菜单
@@ -244,6 +245,8 @@ public class VodController extends BaseController {
             public void run() {
                 if(!isPaused){
                   hideBottom();
+                }else if(isToolBarVisible()){
+                    sToolBar.setVisibility(GONE);
                 }
             }
         };
@@ -850,7 +853,7 @@ public class VodController extends BaseController {
     @Override
     protected void onPlayStateChanged(int playState) {
        // Toast.makeText(getContext(), "playState:"+playState+",isPreviewBack:"+isPreviewBack+",isKeyOn:"+isKeyOn+",isPaused:"+isPaused, Toast.LENGTH_LONG).show();
-        if((playState==VideoView.STATE_ERROR && isPaused && !isKeyOn) ||  (playState==VideoView.STATE_PAUSED && (isPreviewBack || !isKeyOn))){
+        if((playState==VideoView.STATE_ERROR && isPaused && !isKeyOn) ||  (playState==VideoView.STATE_PAUSED && isPreviewBack)){
              //Toast.makeText(getContext(), "isPlaying:"+mControlWrapper.isPlaying()+",pause:"+isPaused+",isKeyOn:"+isKeyOn, Toast.LENGTH_SHORT).show();
             isPreviewBack=false;
             return;
@@ -870,6 +873,7 @@ public class VodController extends BaseController {
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
+                sToolBar.setVisibility(GONE);
                 showSeekBar();//09-26
                 //showBottom();
                 break;
@@ -926,6 +930,7 @@ public class VodController extends BaseController {
         mTopRoot2.setVisibility(GONE);
     }
     void showBottom() {
+        //Toast.makeText(context,"-showBottom-:"+(sToolBar.getVisibility()==VISIBLE),Toast.LENGTH_LONG).show();
         mHandler.removeMessages(1003);
         mHandler.sendEmptyMessage(1002);
     }
@@ -941,11 +946,13 @@ public class VodController extends BaseController {
         isKeyOn=true;
         count++;
         myHandle.removeCallbacks(myRunnable);
-        //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode(), Toast.LENGTH_LONG).show();
+
+        //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",r:"+isToolBarVisible(), Toast.LENGTH_LONG).show();
         if (super.onKeyEvent(event)) {
             return true;
         }
         int keyCode = event.getKeyCode();
+        isPreviewBack=(keyCode==KeyEvent.KEYCODE_BACK);
         int action = event.getAction();
         if (keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_LEFT) {
             count=0;
@@ -981,12 +988,13 @@ public class VodController extends BaseController {
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode== KeyEvent.KEYCODE_MENU) {
-                if (!isToolBarVisible()) {
-                    showBottom();
-                    myHandle.postDelayed(myRunnable, myHandleSeconds);
-                }
-                return true;
-
+               // Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",r:"+isToolBarVisible(), Toast.LENGTH_LONG).show();
+               if(!isToolBarVisible()) {
+                   showBottom();
+                   myHandle.postDelayed(myRunnable, myHandleSeconds);
+                   isKeyOn=false;
+                   return true;
+               }
             }
         } else if (action == KeyEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
@@ -997,6 +1005,13 @@ public class VodController extends BaseController {
                 }
                 if (isInPlayback) {
                     tvSlideStop();
+                    isKeyOn=false;
+                    return true;
+                }
+            }else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode== KeyEvent.KEYCODE_MENU) {
+                if(!isToolBarVisible()) {
+                    showBottom();
+                    myHandle.postDelayed(myRunnable, myHandleSeconds);
                     isKeyOn=false;
                     return true;
                 }
@@ -1021,7 +1036,7 @@ public class VodController extends BaseController {
     @Override
     public boolean onBackPressed() {
         this.isPreviewBack=false;
-        if (super.onBackPressed()) {
+         if (super.onBackPressed()) {
             return true;
         }
         if(isPaused){
@@ -1036,6 +1051,7 @@ public class VodController extends BaseController {
             hideBottom();
             return true;
         }
+        this.isPreviewBack=true;
         return false;
     }
     public void previewBackPress(){
