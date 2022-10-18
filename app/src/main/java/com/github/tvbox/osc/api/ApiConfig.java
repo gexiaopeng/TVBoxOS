@@ -451,7 +451,8 @@ public class ApiConfig {
             String groupName = ((JsonObject) groupElement).get("group").getAsString().trim();
             String[] splitGroupName = groupName.split("_", 2);
             String gName=splitGroupName[0];
-            if(gName==null || gName.length()==0 || gName.indexOf("声明")!=-1 || gName.indexOf("维护")!=-1){
+            if(gName==null || gName.length()==0 || gName.equals("应用多多")  || gName.indexOf("付费")!=-1 || gName.indexOf("严禁")!=-1  || gName.indexOf("盗版")!=-1  || gName.indexOf("永久")!=-1 || gName.indexOf("公众号")!=-1 || gName.indexOf("说明")!=-1 || gName.indexOf("声明")!=-1 || gName.indexOf("维护")!=-1){
+                //长期维护 应用多多 特别声明 直播必看说明
                 continue;
             }
             liveChannelGroup.setGroupIndex(groupIndex++);
