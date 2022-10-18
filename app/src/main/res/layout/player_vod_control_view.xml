@@ -133,7 +133,8 @@
                 android:layout_marginBottom="@dimen/vs_10"
                 android:orientation="horizontal"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:gravity="center"
+                android:visibility="gone">
 
                 <TextView
                     android:singleLine="true"

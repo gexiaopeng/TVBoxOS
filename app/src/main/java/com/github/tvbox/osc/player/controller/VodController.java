@@ -90,6 +90,7 @@ public class VodController extends BaseController {
                     }
                     case 1003: { // 隐藏底部菜单
                         mBottomRoot.setVisibility(GONE);
+                        sToolBar.setVisibility(GONE);
                         mTopRoot1.setVisibility(GONE);
                         mTopRoot2.setVisibility(GONE);
                         break;
@@ -949,14 +950,14 @@ public class VodController extends BaseController {
         if (super.onKeyEvent(event)) {
             return true;
         }
-        Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+",b:"+(mBottomRoot.getVisibility() == VISIBLE ), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+",b:"+isBottomVisible(), Toast.LENGTH_LONG).show();
         int keyCode = event.getKeyCode();
         isPreviewBack=(keyCode==KeyEvent.KEYCODE_BACK);
         int action = event.getAction();
         if (keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_LEFT) {
             count=0;
         }
-        if (mBottomRoot.getVisibility() == VISIBLE && sToolBar.getVisibility() == VISIBLE) {
+        if (isToolBarVisible() && isBottomVisible()) {
             count=0;
             myHandle.postDelayed(myRunnable, myHandleSeconds);
             isKeyOn=false;
@@ -1039,7 +1040,7 @@ public class VodController extends BaseController {
             return true;
         }
         if(isPaused){
-            if(sToolBar.getVisibility()==VISIBLE){
+            if(isToolBarVisible()){
                 sToolBar.setVisibility(GONE);
                 return true;
             }else if (isInPlaybackState()) {
