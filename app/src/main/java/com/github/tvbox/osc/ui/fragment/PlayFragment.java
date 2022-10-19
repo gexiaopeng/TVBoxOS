@@ -1520,7 +1520,8 @@ public class PlayFragment extends BaseLazyFragment {
                 for (String k : hds.keySet()) {
                     if (k.equalsIgnoreCase("user-agent")
                             || k.equalsIgnoreCase("referer")
-                            || k.equalsIgnoreCase("origin")) {
+                            || k.equalsIgnoreCase("origin")
+                            || k.equalsIgnoreCase("cookie")) {
                         webHeaders.put(k, hds.get(k));
                     }
                 }
@@ -1622,13 +1623,6 @@ public class PlayFragment extends BaseLazyFragment {
         @Override
         public void onLoadFinished(XWalkView view, String url) {
             super.onLoadFinished(view, url);
-            String click=sourceBean.getClickSelector();
-            LOG.i("onLoadFinished url:" + url);
-            if(!click.isEmpty() && url.contains(click.split(";")[0])){
-                String js="$(\""+ click.split(";")[1]+"\").click();";
-                LOG.i(js);
-                mXwalkWebView.loadUrl("javascript:"+js);
-            }
         }
 
         @Override
@@ -1663,7 +1657,8 @@ public class PlayFragment extends BaseLazyFragment {
                         for (String k : hds.keySet()) {
                             if (k.equalsIgnoreCase("user-agent")
                                     || k.equalsIgnoreCase("referer")
-                                    || k.equalsIgnoreCase("origin")) {
+                                    || k.equalsIgnoreCase("origin")
+                                    || k.equalsIgnoreCase("cookie")) {
                                 webHeaders.put(k, hds.get(k));
                             }
                         }
