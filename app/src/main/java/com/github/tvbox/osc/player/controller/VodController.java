@@ -871,6 +871,7 @@ public class VodController extends BaseController {
                 break;
             case VideoView.STATE_PAUSED:
                 isPaused=true;
+                mPauseRoot.setVisibility(VISIBLE);
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
@@ -957,7 +958,7 @@ public class VodController extends BaseController {
         if (keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_LEFT) {
             count=0;
         }
-        if (isToolBarVisible() && isBottomVisible()) {
+        if (isToolBarVisible() && isBottomVisible() && keyCode != KeyEvent.KEYCODE_DPAD_DOWN && keyCode != KeyEvent.KEYCODE_DPAD_UP && keyCode!= KeyEvent.KEYCODE_MENU) {
             count=0;
             myHandle.postDelayed(myRunnable, myHandleSeconds);
             isKeyOn=false;
@@ -982,6 +983,7 @@ public class VodController extends BaseController {
                     return true;
                 }else if(isPaused){
                     isPaused=false;
+                    mPauseRoot.setVisibility(GONE);
                     hideSeekBar();
                     listener.replay(false);
                     return true;
@@ -1045,10 +1047,16 @@ public class VodController extends BaseController {
             if(isToolBarVisible()){
                 sToolBar.setVisibility(GONE);
                 return true;
-            }else if (isInPlaybackState()) {
-                togglePlay();
-                return true;
             }
+           isPaused=false;
+           if (isInPlaybackState()) {
+               togglePlay();
+               return true;
+           }
+           mPauseRoot.setVisibility(GONE);
+           hideSeekBar();
+           listener.replay(false);
+           return true;
         }else if (isBottomVisible() && !isPaused) {
             hideBottom();
             return true;
