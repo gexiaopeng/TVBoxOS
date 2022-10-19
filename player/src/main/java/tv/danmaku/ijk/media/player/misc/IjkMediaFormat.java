@@ -118,7 +118,7 @@ public class IjkMediaFormat implements IMediaFormat {
                 } else if (bitRate < 1000) {
                     return String.format(Locale.US, "%d bit/s", bitRate);
                 } else {
-                    return String.format(Locale.US, "%d kb/s", bitRate / 1000);
+                    return String.format(Locale.US, "%d Kb/s", bitRate / 1000);
                 }
             }
         });

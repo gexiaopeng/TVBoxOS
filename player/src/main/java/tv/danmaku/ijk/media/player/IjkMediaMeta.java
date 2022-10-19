@@ -372,7 +372,7 @@ public class IjkMediaMeta {
             } else if (mBitrate < 1000) {
                 return String.format(Locale.US, "%d bit/s", mBitrate);
             } else {
-                return String.format(Locale.US, "%d kb/s", mBitrate / 1000);
+                return String.format(Locale.US, "%d Kb/s", mBitrate / 1000);
             }
         }
 

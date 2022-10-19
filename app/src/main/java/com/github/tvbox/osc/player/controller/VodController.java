@@ -66,7 +66,7 @@ public class VodController extends BaseController {
                     case 1000: { // seek 刷新
                         isUpdateSeekUI=true;
                         //mProgressRoot.setVisibility(VISIBLE);
-                        mPauseRoot.setVisibility(GONE);
+                        hidePause();
                         showSeekBar();
                         break;
                     }
@@ -320,15 +320,19 @@ public class VodController extends BaseController {
         mPlayerRetry.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.replay(true);
+                hidePause();
                 hideBottom();
+                listener.replay(true);
+
             }
         });
         mPlayrefresh.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.replay(false);
+                hidePause();
                 hideBottom();
+                listener.replay(false);
+
             }
         });
         mNextBtn.setOnClickListener(new OnClickListener() {
@@ -337,16 +341,18 @@ public class VodController extends BaseController {
 //                if (isPaused) {
 //                    togglePlay();
 //                } else {
+                hideBottom();
                 listener.playNext(false);
                 //}
-                hideBottom();
+
             }
         });
         mPreBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.playPre();
                 hideBottom();
+                listener.playPre();
+
             }
         });
         mPlayerScaleBtn.setOnClickListener(new OnClickListener() {
@@ -942,7 +948,9 @@ public class VodController extends BaseController {
         mHandler.removeMessages(1002);
         mHandler.sendEmptyMessage(1003);
     }
-
+    void hidePause() {
+      mPauseRoot.setVisibility(GONE);
+    }
     @Override
     public boolean onKeyEvent(KeyEvent event) {
         isKeyOn=true;
@@ -983,7 +991,7 @@ public class VodController extends BaseController {
                     return true;
                 }else if(isPaused){
                     isPaused=false;
-                    mPauseRoot.setVisibility(GONE);
+                    hidePause();
                     hideSeekBar();
                     listener.replay(false);
                     return true;
@@ -1049,12 +1057,12 @@ public class VodController extends BaseController {
                 return true;
             }
            isPaused=false;
+            hidePause();
+            hideSeekBar();
            if (isInPlaybackState()) {
                togglePlay();
                return true;
            }
-           mPauseRoot.setVisibility(GONE);
-           hideSeekBar();
            listener.replay(false);
            return true;
         }else if (isBottomVisible() && !isPaused) {
@@ -1069,6 +1077,7 @@ public class VodController extends BaseController {
     }
     private void selectPlayType(int type){
         try {
+            hidePause();
             mPlayerConfig.put("pl", type);
             updatePlayerCfgView();
             listener.updatePlayerCfg();
