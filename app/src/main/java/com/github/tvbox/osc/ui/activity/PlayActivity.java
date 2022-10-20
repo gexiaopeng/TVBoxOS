@@ -58,6 +58,7 @@ import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.dialog.SubtitleDialog;
+import com.github.tvbox.osc.ui.fragment.PlayFragment;
 import com.github.tvbox.osc.util.AdBlocker;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -113,7 +114,7 @@ public class PlayActivity extends BaseActivity {
     private VodController mController;
     private SourceViewModel sourceViewModel;
     private Handler mHandler;
-
+    private VodController.VodPauseManager vPause;
     private long videoDuration = -1;
     private ProgressManager progressManager;
     @Override
@@ -184,6 +185,18 @@ public class PlayActivity extends BaseActivity {
         };
         mVideoView.setProgressManager(progressManager);
         mController.setListener(new VodController.VodControlListener() {
+            @Override
+            public void playNext(VodController.VodPauseManager vPause) {
+                PlayActivity.this.vPause=vPause;
+                playNext(false);
+            }
+
+            @Override
+            public void playPre(VodController.VodPauseManager vPause) {
+                PlayActivity.this.vPause=vPause;
+                playPre();
+            }
+
             @Override
             public void playNext(boolean rmProgress) {
                 String preProgressKey = progressKey;
@@ -825,6 +838,9 @@ public class PlayActivity extends BaseActivity {
     }
 
     public void play(boolean reset) {
+        if(PlayActivity.this.vPause!=null){
+            PlayActivity.this.vPause.hidePauseShow();
+        }
         VodInfo.VodSeries vs = mVodInfo.seriesMap.get(mVodInfo.playFlag).get(mVodInfo.playIndex);
         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_REFRESH, mVodInfo.playIndex));
         setTip("正在获取播放信息", true, false);

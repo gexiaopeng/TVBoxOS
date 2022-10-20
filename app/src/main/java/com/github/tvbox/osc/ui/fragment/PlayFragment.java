@@ -112,7 +112,7 @@ public class PlayFragment extends BaseLazyFragment {
     private VodController mController;
     private SourceViewModel sourceViewModel;
     private Handler mHandler;
-
+    private VodController.VodPauseManager vPause;
     private long videoDuration = -1;
     private  ProgressManager progressManager;
     @Override
@@ -182,7 +182,20 @@ public class PlayFragment extends BaseLazyFragment {
             }
         };
         mVideoView.setProgressManager(progressManager);
+
         mController.setListener(new VodController.VodControlListener() {
+            @Override
+            public void playNext(VodController.VodPauseManager vPause) {
+                PlayFragment.this.vPause=vPause;
+                playNext(false);
+            }
+
+            @Override
+            public void playPre(VodController.VodPauseManager vPause) {
+                PlayFragment.this.vPause=vPause;
+                playPre();
+            }
+
             @Override
             public void playNext(boolean rmProgress) {
                 String preProgressKey = progressKey;
@@ -842,6 +855,9 @@ public class PlayFragment extends BaseLazyFragment {
 
     public void play(boolean reset) {
         if(mVodInfo==null)return;
+        if(PlayFragment.this.vPause!=null){
+            PlayFragment.this.vPause.hidePauseShow();
+        }
         VodInfo.VodSeries vs = mVodInfo.seriesMap.get(mVodInfo.playFlag).get(mVodInfo.playIndex);
         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_REFRESH, mVodInfo.playIndex));
         setTip("正在获取播放信息", true, false);

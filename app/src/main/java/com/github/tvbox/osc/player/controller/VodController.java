@@ -90,7 +90,7 @@ public class VodController extends BaseController {
                     }
                     case 1003: { // 隐藏底部菜单
                         mBottomRoot.setVisibility(GONE);
-                        sToolBar.setVisibility(GONE);
+                        hideToolBar();
                         mTopRoot1.setVisibility(GONE);
                         mTopRoot2.setVisibility(GONE);
                         break;
@@ -247,7 +247,7 @@ public class VodController extends BaseController {
                 if(!isPaused){
                   hideBottom();
                 }else if(isToolBarVisible()){
-                    sToolBar.setVisibility(GONE);
+                    hideToolBar();
                 }
             }
         };
@@ -342,7 +342,13 @@ public class VodController extends BaseController {
 //                    togglePlay();
 //                } else {
                 hideBottom();
-                listener.playNext(false);
+                //listener.playNext(false);
+                listener.playNext(new VodPauseManager() {
+                    @Override
+                    public void hidePauseShow() {
+                        hidePause();
+                    }
+                });
                 //}
 
             }
@@ -351,7 +357,13 @@ public class VodController extends BaseController {
             @Override
             public void onClick(View view) {
                 hideBottom();
-                listener.playPre();
+                //listener.playPre();
+                listener.playPre(new VodPauseManager() {
+                    @Override
+                    public void hidePauseShow() {
+                        hidePause();
+                    }
+                });
 
             }
         });
@@ -732,8 +744,12 @@ public class VodController extends BaseController {
         mHandler.removeMessages(1004);
         mHandler.sendEmptyMessageDelayed(1004, 100);
     }
-
+    public interface VodPauseManager{
+        void hidePauseShow();
+    }
     public interface VodControlListener {
+        void playNext(VodPauseManager  vPause);
+        void playPre(VodPauseManager  vPause);
         void playNext(boolean rmProgress);
 
         void playPre();
@@ -881,7 +897,7 @@ public class VodController extends BaseController {
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
-                sToolBar.setVisibility(GONE);
+                hideToolBar();
                 showSeekBar();//09-26
                 //showBottom();
                 break;
@@ -925,7 +941,7 @@ public class VodController extends BaseController {
     void showSeekBar(){
          mMyseekBar.setVisibility(VISIBLE);
          mBottomRoot.setVisibility(VISIBLE);
-         sToolBar.setVisibility(GONE);
+         hideToolBar();
          mTopRoot1.setVisibility(VISIBLE);
          mTopRoot2.setVisibility(VISIBLE);
          mPlayTitle.setVisibility(GONE);
@@ -950,6 +966,9 @@ public class VodController extends BaseController {
     }
     void hidePause() {
       mPauseRoot.setVisibility(GONE);
+    }
+    void hideToolBar(){
+        sToolBar.setVisibility(GONE);
     }
     @Override
     public boolean onKeyEvent(KeyEvent event) {
@@ -1003,7 +1022,11 @@ public class VodController extends BaseController {
                    showBottom();
                    myHandle.postDelayed(myRunnable, myHandleSeconds);
                }else{
-                   hideBottom();
+                   if(isPaused){
+                       hideToolBar();
+                   }else {
+                       hideBottom();
+                   }
                }
                isKeyOn=false;
                return true;
@@ -1053,7 +1076,7 @@ public class VodController extends BaseController {
         }
         if(isPaused){
             if(isToolBarVisible()){
-                sToolBar.setVisibility(GONE);
+                hideToolBar();
                 return true;
             }
            isPaused=false;
