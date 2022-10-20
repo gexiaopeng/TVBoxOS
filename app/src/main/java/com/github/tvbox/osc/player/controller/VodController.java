@@ -445,7 +445,7 @@ public class VodController extends BaseController {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mPlayerBtn.requestFocus();
+                //mPlayerBtn.requestFocus();
             }
         });
 
@@ -476,9 +476,8 @@ public class VodController extends BaseController {
                                 int thisPlayType = players.get(pos);
                                 if (thisPlayType != playerType) {
                                     selectPlayType(thisPlayType);
-                                    mPlayerBtn.requestFocus();
-//                                  hideBottom();
-                                }
+                                    //mPlayerBtn.requestFocus();
+                              }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1005,7 +1004,7 @@ public class VodController extends BaseController {
         if (super.onKeyEvent(event)) {
             return true;
         }
-        //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+",b:"+isBottomVisible(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+",b:"+isBottomVisible(), Toast.LENGTH_LONG).show();
         int keyCode = event.getKeyCode();
         isPreviewBack=(keyCode==KeyEvent.KEYCODE_BACK);
         int action = event.getAction();
@@ -1120,6 +1119,7 @@ public class VodController extends BaseController {
     }
     private void selectPlayType(int type){
         try {
+            hideBottom();
             hidePause();
             mPlayerConfig.put("pl", type);
             updatePlayerCfgView();
