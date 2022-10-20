@@ -1043,13 +1043,6 @@ public class VodController extends BaseController {
                     isKeyOn=false;
                     return true;
                 }
-            }else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode== KeyEvent.KEYCODE_MENU) {
-                if(!isToolBarVisible()) {
-//                    showBottom();
-//                    myHandle.postDelayed(myRunnable, myHandleSeconds);
-//                    isKeyOn=false;
-//                    return true;
-                }
             }
             isKeyOn=false;
         }
