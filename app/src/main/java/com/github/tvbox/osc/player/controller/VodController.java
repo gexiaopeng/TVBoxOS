@@ -22,8 +22,10 @@ import androidx.recyclerview.widget.DiffUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
+import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.ParseBean;
+import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView;
 import com.github.tvbox.osc.ui.activity.PlayActivity;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
@@ -79,13 +81,12 @@ public class VodController extends BaseController {
                     }
                     case 1002: { // 显示底部菜单
                         mBottomRoot.setVisibility(VISIBLE);
-                        sToolBar.setVisibility(VISIBLE);
+                        showTooBar();
                         mTopRoot1.setVisibility(VISIBLE);
                         mTopRoot2.setVisibility(VISIBLE);
                         mPlayTitle.setVisibility(GONE);
                        // mBottomRoot.requestFocus();
-                        mNextBtn.requestFocus();
-                        //Toast.makeText(context,"1002:"+(sToolBar.getVisibility()==VISIBLE),Toast.LENGTH_LONG).show();
+                         //Toast.makeText(context,"1002:"+(sToolBar.getVisibility()==VISIBLE),Toast.LENGTH_LONG).show();
                         break;
                     }
                     case 1003: { // 隐藏底部菜单
@@ -237,7 +238,6 @@ public class VodController extends BaseController {
         mSubtitleView.setTextSize(subtitleTextSize);
         myHandle=new Handler();
         mLandscapePortraitBtn = findViewById(R.id.landscape_portrait);
-
         initSubtitleInfo();
 
         myHandle = new Handler();
@@ -899,7 +899,6 @@ public class VodController extends BaseController {
                 mPlayTitle.setVisibility(VISIBLE);
                 hideToolBar();
                 showSeekBar();//09-26
-                //showBottom();
                 break;
             case VideoView.STATE_ERROR:
                 int playerType =0;
@@ -966,6 +965,34 @@ public class VodController extends BaseController {
     }
     void hidePause() {
       mPauseRoot.setVisibility(GONE);
+    }
+    void showTooBar(){
+        VodInfo mVodInfo = App.getInstance().getVodInfo();
+        int size=mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
+        sToolBar.setVisibility(VISIBLE);
+        if(size>1) {
+            if(mVodInfo.playIndex+1<size){
+                mNextBtn.setVisibility(VISIBLE);
+                mNextBtn.requestFocus();
+            }else{
+                mNextBtn.setVisibility(GONE);
+            }
+            if(mVodInfo.playIndex!=0){
+                mPreBtn.setVisibility(VISIBLE);
+                if(mVodInfo.playIndex+1==size){
+                    mPreBtn.requestFocus();
+                }
+            }else{
+                mPreBtn.setVisibility(GONE);
+            }
+
+
+        }else {
+            mNextBtn.setVisibility(GONE);
+            mPreBtn.setVisibility(GONE);
+            mPlayerBtn.requestFocus();
+            //mPlayerRetry.requestFocus();
+        }
     }
     void hideToolBar(){
         sToolBar.setVisibility(GONE);
