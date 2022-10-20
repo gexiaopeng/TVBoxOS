@@ -11,6 +11,7 @@ import com.github.tvbox.osc.base.App;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+import xyz.doikki.videoplayer.player.VideoView;
 
 /**
  * 直播控制器
@@ -67,6 +68,9 @@ public class LiveController extends BaseController {
 
     @Override
     protected void onPlayStateChanged(int playState) {
+        if(playState== VideoView.STATE_PAUSED){
+            return;
+        }
         super.onPlayStateChanged(playState);
         listener.playStateChanged(playState);
     }
