@@ -81,7 +81,7 @@
             android:maxLines="1"
             android:paddingRight="@dimen/vs_20"
             android:tag="vod_control_pause_time"
-            android:text="0Kb/s"
+            android:text="0Kbps"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_20" />
     </LinearLayout>

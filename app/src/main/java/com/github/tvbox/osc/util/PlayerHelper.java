@@ -258,10 +258,10 @@ public class PlayerHelper {
 
     public static String getDisplaySpeed(long speed) {
         if(speed > 1048576)
-            return (speed / 1048576) + "Mb/s";
+            return (speed / 1048576) + "Mbps";
         else if(speed > 1024)
-            return (speed / 1024) + "Kb/s";
+            return (speed / 1024) + "Kbps";
         else
-            return speed > 0?speed + "B/s":"";
+            return speed > 0?speed + "bps":"";
     }
 }
