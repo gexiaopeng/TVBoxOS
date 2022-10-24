@@ -85,7 +85,7 @@ public class SearchActivity extends BaseActivity {
 
     private HashMap<String, String> mCheckSources = null;
     private SearchCheckboxDialog mSearchCheckboxDialog = null;
-
+    private RemoteDialog remoteDialog;
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_search;
@@ -243,8 +243,9 @@ public class SearchActivity extends BaseActivity {
                         loadRec(text);
                     }
                 } else if (pos == 0) {
-                    RemoteDialog remoteDialog = new RemoteDialog(mContext);
+                    remoteDialog = new RemoteDialog(mContext);
                     remoteDialog.show();
+
                 }
             }
         });
@@ -403,6 +404,9 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void search(String title) {
+        if(remoteDialog!=null && remoteDialog.isShowing()){
+            remoteDialog.hide();
+        }
         cancel();
         showLoading();
         this.searchTitle = title;
