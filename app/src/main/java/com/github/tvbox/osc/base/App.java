@@ -56,6 +56,9 @@ public class App extends MultiDexApplication {
         // Hawk
         Hawk.init(this).build();
         Hawk.put(HawkConfig.DEBUG_OPEN, false);
+        if (!Hawk.contains(HawkConfig.HOME_REC_STYLE)) {
+            Hawk.put(HawkConfig.HOME_REC_STYLE, true);
+        }
         if (!Hawk.contains(HawkConfig.PLAY_TYPE)) {
             Hawk.put(HawkConfig.PLAY_TYPE, 2);
         }
