@@ -289,9 +289,10 @@ public class ApiConfig {
             JsonObject obj = (JsonObject) opt;
             SourceBean sb = new SourceBean();
             String siteKey = obj.get("key").getAsString().trim();
+            String name = obj.get("name").getAsString().trim();
             String api=obj.get("api").getAsString().trim();
             sb.setKey(siteKey);
-            sb.setName(obj.get("name").getAsString().trim());
+            sb.setName(name);
             sb.setType(obj.get("type").getAsInt());
             sb.setApi(api);
             sb.setSearchable(DefaultConfig.safeJsonInt(obj, "searchable", 1));
@@ -307,15 +308,16 @@ public class ApiConfig {
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
             sb.setClickSelector(DefaultConfig.safeJsonString(obj, "click", ""));
-            if (firstSite == null && !siteKey.isEmpty() && !"csp_77".equalsIgnoreCase(siteKey)) {
+            if(siteKey.isEmpty() || "csp_77".equalsIgnoreCase(siteKey) || name.isEmpty() || name.indexOf("公众号")!=-1 ||  name.indexOf("应用多多")!=-1 ){
+                continue;
+            }
+            if (firstSite == null) {
                 firstSite = sb;
             }
             if (firstSite != null && ("csp_Kuaikan".equalsIgnoreCase(siteKey) || "csp_Kuaikan".equalsIgnoreCase(api))) {
                 firstSite = sb;
             }
-            if(!siteKey.isEmpty()) {
-                sourceBeanList.put(siteKey, sb);
-            }
+            sourceBeanList.put(siteKey, sb);
         }
         if (sourceBeanList != null && sourceBeanList.size() > 0) {
             String home = Hawk.get(HawkConfig.HOME_API, "");
