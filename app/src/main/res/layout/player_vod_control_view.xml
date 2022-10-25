@@ -525,7 +525,6 @@
             android:layout_width="@dimen/vs_280"
             android:layout_height="@dimen/vs_200"
             android:layout_gravity="center"
-            android:background="@drawable/shape_user_focus"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="center"
