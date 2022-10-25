@@ -27,6 +27,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
+import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.AbsSortXml;
@@ -59,6 +60,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -291,11 +293,17 @@ public class HomeActivity extends BaseActivity {
 
                     @Override
                     public void error(String msg) {
-                        jarInitOk = true;
+                        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/csp.jar");
+                        if(cache.exists() && !"1".equalsIgnoreCase(msg) && !"2".equalsIgnoreCase(msg)){
+                            jarInitOk = false;
+                            useCacheConfig=true;
+                        }else{
+                            jarInitOk = true;
+                        }
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(HomeActivity.this, "jar加载失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HomeActivity.this, "jar加载失败："+msg, Toast.LENGTH_SHORT).show();
                                 initData();
                             }
                         });
