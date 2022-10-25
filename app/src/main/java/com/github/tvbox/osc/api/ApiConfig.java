@@ -171,6 +171,15 @@ public class ApiConfig {
                             callback.success();
                         } catch (Throwable th) {
                             th.printStackTrace();
+                            if (cache.exists()) {
+                                try {
+                                    parseJson(apiUrl, cache);
+                                    callback.success();
+                                    return;
+                                } catch (Throwable the) {
+                                    th.printStackTrace();
+                                }
+                            }
                             callback.error("解析配置失败");
                         }
                     }
@@ -219,7 +228,7 @@ public class ApiConfig {
                 if (jarLoader.load(cache.getAbsolutePath())) {
                     callback.success();
                 } else {
-                    callback.error("");
+                    callback.error("1");
                 }
                 return;
             }
@@ -250,17 +259,17 @@ public class ApiConfig {
                             if (jarLoader.load(response.body().getAbsolutePath())) {
                                 callback.success();
                             } else {
-                                callback.error("");
+                                callback.error("2");
                             }
                         } else {
-                            callback.error("");
+                            callback.error("3");
                         }
                     }
 
                     @Override
                     public void onError(Response<File> response) {
                         super.onError(response);
-                        callback.error("");
+                        callback.error("4");
                     }
                 });
     }
