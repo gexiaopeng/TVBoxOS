@@ -5,8 +5,10 @@ import android.content.pm.ActivityInfo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.*;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -53,9 +56,11 @@ import xyz.doikki.videoplayer.util.PlayerUtils;
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 
 public class VodController extends BaseController {
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public VodController(@NonNull @NotNull Context context) {
         super(context);
         this.context=context;
+        getScreenWidth();
         thumbView = LayoutInflater.from(this.context).inflate(R.layout.item_seekbar_time, null, false);
         mTimeBar.setThumb(getThumb(0));
         list.add(2);
@@ -112,7 +117,21 @@ public class VodController extends BaseController {
             }
         };
     }
-    public Drawable getThumb(int position) {
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private  void  getScreenWidth(){
+               Point point=new Point();
+               try {
+                   context.getDisplay().getRealSize(point);
+                   width=point.x;
+                   if(width>1920){
+                       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width-320, LinearLayout.LayoutParams.MATCH_PARENT);
+                       mTopRoot1.setLayoutParams(lp);
+                   }
+              } catch (Throwable e) {
+                   width=-1;
+              }
+    }
+   public Drawable getThumb(int position) {
         ((TextView) thumbView.findViewById(R.id.tvProgress)).setText(stringForTime(position));
         thumbView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         Bitmap bitmap = Bitmap.createBitmap(thumbView.getMeasuredWidth(), thumbView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
@@ -172,6 +191,7 @@ public class VodController extends BaseController {
     boolean isKeyOn=false;
     List<Integer> list=new ArrayList();
     boolean isPreviewBack=false;
+    private int width;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -236,10 +256,8 @@ public class VodController extends BaseController {
         mPauseRoot = findViewWithTag("vod_control_pause");
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
-        myHandle=new Handler();
         mLandscapePortraitBtn = findViewById(R.id.landscape_portrait);
         initSubtitleInfo();
-
         myHandle = new Handler();
         myRunnable = new Runnable() {
             @Override

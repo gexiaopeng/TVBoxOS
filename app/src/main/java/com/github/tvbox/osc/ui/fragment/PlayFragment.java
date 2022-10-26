@@ -15,6 +15,7 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
@@ -126,7 +127,6 @@ public class PlayFragment extends BaseLazyFragment {
         initViewModel();
         initData();
     }
-
     private void initView() {
         mHandler = new Handler(new Handler.Callback() {
             @Override
