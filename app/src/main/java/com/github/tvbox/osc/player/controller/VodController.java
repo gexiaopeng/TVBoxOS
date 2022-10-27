@@ -74,7 +74,9 @@ public class VodController extends BaseController {
                         isUpdateSeekUI=true;
                         //mProgressRoot.setVisibility(VISIBLE);
                         hidePause();
-                        showSeekBar();
+                        showSeekBar(true);
+                        mTopRoot1.setVisibility(GONE);
+                        mTopRoot2.setVisibility(GONE);
                         break;
                     }
                     case 1001: { // seek 关闭
@@ -925,7 +927,7 @@ public class VodController extends BaseController {
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
                 hideToolBar();
-                showSeekBar();//09-26
+                showSeekBar(false);//09-26
                 break;
             case VideoView.STATE_ERROR:
                 int playerType =0;
@@ -965,13 +967,15 @@ public class VodController extends BaseController {
         return mBottomRoot.getVisibility() == VISIBLE;
     }
     @RequiresApi(api = Build.VERSION_CODES.R)
-    void showSeekBar(){
+    void showSeekBar(boolean isRefresh){
          mMyseekBar.setVisibility(VISIBLE);
          mBottomRoot.setVisibility(VISIBLE);
          hideToolBar();
-        setTopContainerWidth();
-         mTopRoot1.setVisibility(VISIBLE);
-         mTopRoot2.setVisibility(VISIBLE);
+         setTopContainerWidth();
+         if(!isRefresh) {
+             mTopRoot1.setVisibility(VISIBLE);
+             mTopRoot2.setVisibility(VISIBLE);
+         }
          mPlayTitle.setVisibility(GONE);
          mBottomRoot.requestFocus();
     }
@@ -1053,7 +1057,7 @@ public class VodController extends BaseController {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if(count==1){
                     if (!isBottomVisible()) {
-                        showSeekBar();
+                        showSeekBar(false);
                     }
                     return true;
                 }
