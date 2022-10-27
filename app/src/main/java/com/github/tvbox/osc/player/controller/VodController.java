@@ -60,7 +60,7 @@ public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
         super(context);
         this.context=context;
-        getScreenWidth();
+        setTopContainerWidth();
         thumbView = LayoutInflater.from(this.context).inflate(R.layout.item_seekbar_time, null, false);
         mTimeBar.setThumb(getThumb(0));
         list.add(2);
@@ -87,6 +87,7 @@ public class VodController extends BaseController {
                     case 1002: { // 显示底部菜单
                         mBottomRoot.setVisibility(VISIBLE);
                         showTooBar();
+                        setTopContainerWidth();
                         mTopRoot1.setVisibility(VISIBLE);
                         mTopRoot2.setVisibility(VISIBLE);
                         mPlayTitle.setVisibility(GONE);
@@ -118,15 +119,21 @@ public class VodController extends BaseController {
         };
     }
     @RequiresApi(api = Build.VERSION_CODES.R)
-    private  void  getScreenWidth(){
+    private  void  setTopContainerWidth(){
                Point point=new Point();
                try {
                    context.getDisplay().getRealSize(point);
                    width=point.x;
-                   if(width>1920){
-                       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width-320, LinearLayout.LayoutParams.MATCH_PARENT);
-                       mTopRoot1.setLayoutParams(lp);
+                   int rate=(int)(width*0.85);
+                   if(width>3800){
+                       rate=(int)(width*0.95);
+                   }else if(width>2300){
+                       rate=(int)(width*0.89);
+                   }else if(width>1800){
+                       rate=(int)(width*0.90);
                    }
+                   LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rate, LinearLayout.LayoutParams.MATCH_PARENT);
+                   mTopRoot1.setLayoutParams(lp);
               } catch (Throwable e) {
                    width=-1;
               }
@@ -679,6 +686,7 @@ public class VodController extends BaseController {
             }
         });
         mLandscapePortraitBtn.setOnClickListener(new OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View view) {
                 FastClickCheckUtil.check(view);
@@ -697,6 +705,7 @@ public class VodController extends BaseController {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     void setLandscapePortrait() {
         int requestedOrientation = mActivity.getRequestedOrientation();
         if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
@@ -890,6 +899,7 @@ public class VodController extends BaseController {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onPlayStateChanged(int playState) {
        // Toast.makeText(getContext(), "playState:"+playState+",isPreviewBack:"+isPreviewBack+",isKeyOn:"+isKeyOn+",isPaused:"+isPaused, Toast.LENGTH_LONG).show();
@@ -954,10 +964,12 @@ public class VodController extends BaseController {
     boolean isBottomVisible() {
         return mBottomRoot.getVisibility() == VISIBLE;
     }
+    @RequiresApi(api = Build.VERSION_CODES.R)
     void showSeekBar(){
          mMyseekBar.setVisibility(VISIBLE);
          mBottomRoot.setVisibility(VISIBLE);
          hideToolBar();
+        setTopContainerWidth();
          mTopRoot1.setVisibility(VISIBLE);
          mTopRoot2.setVisibility(VISIBLE);
          mPlayTitle.setVisibility(GONE);
@@ -1014,6 +1026,7 @@ public class VodController extends BaseController {
     void hideToolBar(){
         sToolBar.setVisibility(GONE);
     }
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     public boolean onKeyEvent(KeyEvent event) {
         isKeyOn=true;
@@ -1111,6 +1124,7 @@ public class VodController extends BaseController {
         }
         return true;
     }
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     public boolean onBackPressed() {
         this.isPreviewBack=false;

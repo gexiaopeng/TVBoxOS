@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -121,12 +122,14 @@ public class PlayFragment extends BaseLazyFragment {
         return R.layout.activity_play;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void init() {
         initView();
         initViewModel();
         initData();
     }
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private void initView() {
         mHandler = new Handler(new Handler.Callback() {
             @Override
@@ -718,6 +721,7 @@ public class PlayFragment extends BaseLazyFragment {
         mController.setPlayerConfig(mVodPlayerCfg);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public boolean onBackPressed() {
         int requestedOrientation = getActivity().getRequestedOrientation();
         if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
@@ -734,6 +738,7 @@ public class PlayFragment extends BaseLazyFragment {
             mController.previewBackPress();
         }
     }
+    @SuppressLint("NewApi")
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event != null) {
             if (mController.onKeyEvent(event)) {
