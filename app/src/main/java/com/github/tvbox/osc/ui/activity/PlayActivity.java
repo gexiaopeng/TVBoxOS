@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
+import android.webkit.CookieManager;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
@@ -107,6 +108,7 @@ import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.ProgressManager;
 
 public class PlayActivity extends BaseActivity {
+    private static String webCookieStr;
     private MyVideoView mVideoView;
     private TextView mPlayLoadTip;
     private ImageView mPlayLoadErr;
@@ -633,6 +635,7 @@ public class PlayActivity extends BaseActivity {
                         HashMap<String, String> headers = null;
                         webUserAgent = null;
                         webHeaderMap = null;
+                        webCookieStr = null;
                         if (info.has("header")) {
                             try {
                                 JSONObject hds = new JSONObject(info.getString("header"));
@@ -1435,6 +1438,12 @@ public class PlayActivity extends BaseActivity {
         }
 
         @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            mSysWebView.loadUrl(url);
+            return true;
+        }
+
+        @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted( view,  url, favicon);
         }
@@ -1488,6 +1497,7 @@ public class PlayActivity extends BaseActivity {
                         url = loadFoundVideoUrls.poll();
                         mHandler.removeMessages(100);
                         if (headers != null && !headers.isEmpty()) {
+                            if(webCookieStr!=null)headers.put("Cookie"," " + webCookieStr);//携带cookie
                             playUrl(url, headers);
                         } else {
                             playUrl(url, null);
@@ -1505,8 +1515,10 @@ public class PlayActivity extends BaseActivity {
         @Nullable
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            WebResourceResponse response = checkIsVideo(url, null);
-            return response;
+            CookieManager cookieManager = CookieManager.getInstance();
+            String CookieStr = cookieManager.getCookie(url);
+            if(CookieStr!=null)webCookieStr=CookieStr;
+            return checkIsVideo(url, null);
         }
 
         @Nullable
@@ -1521,9 +1533,8 @@ public class PlayActivity extends BaseActivity {
                 for (String k : hds.keySet()) {
                     if (k.equalsIgnoreCase("user-agent")
                             || k.equalsIgnoreCase("referer")
-                            || k.equalsIgnoreCase("origin")
-                            || k.equalsIgnoreCase("cookie")) {
-                        webHeaders.put(k, hds.get(k));
+                            || k.equalsIgnoreCase("origin")) {
+                        webHeaders.put(k," " + hds.get(k));
                     }
                 }
             }
@@ -1623,6 +1634,9 @@ public class PlayActivity extends BaseActivity {
 
         @Override
         public void onLoadFinished(XWalkView view, String url) {
+            CookieManager cookieManager = CookieManager.getInstance();
+            String CookieStr = cookieManager.getCookie(url);
+            if(CookieStr!=null)webCookieStr=CookieStr;
             super.onLoadFinished(view, url);
         }
 
@@ -1664,9 +1678,8 @@ public class PlayActivity extends BaseActivity {
                         for (String k : hds.keySet()) {
                             if (k.equalsIgnoreCase("user-agent")
                                     || k.equalsIgnoreCase("referer")
-                                    || k.equalsIgnoreCase("origin")
-                                    || k.equalsIgnoreCase("cookie")) {
-                                webHeaders.put(k, hds.get(k));
+                                    || k.equalsIgnoreCase("origin")) {
+                                webHeaders.put(k," " + hds.get(k));
                             }
                         }
                     }
@@ -1677,6 +1690,7 @@ public class PlayActivity extends BaseActivity {
                         mHandler.removeMessages(100);
                         url = loadFoundVideoUrls.poll();
                         if (!webHeaders.isEmpty()) {
+                            if(webCookieStr!=null)webHeaders.put("Cookie"," " + webCookieStr);//携带cookie
                             playUrl(url, webHeaders);
                         } else {
                             playUrl(url, null);
@@ -1692,7 +1706,8 @@ public class PlayActivity extends BaseActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(XWalkView view, String s) {
-            return false;
+            mXwalkWebView.loadUrl(s);
+            return true;
         }
 
         @Override
