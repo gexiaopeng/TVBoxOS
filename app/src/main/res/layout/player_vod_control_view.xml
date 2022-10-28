@@ -21,7 +21,7 @@
             android:visibility="gone"
             tools:visibility="visible"
             android:paddingLeft="@dimen/vs_20"
-            android:paddingTop="@dimen/vs_10"
+            android:paddingTop="@dimen/vs_0"
             android:paddingBottom="@dimen/vs_20"
             android:orientation="vertical">
 
@@ -57,7 +57,7 @@
     <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/vs_10"
+            android:paddingTop="@dimen/vs_0"
             android:layout_gravity="right">
         <LinearLayout
                 android:layout_width="match_parent"
