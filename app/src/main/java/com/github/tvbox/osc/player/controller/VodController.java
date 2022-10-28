@@ -1090,7 +1090,7 @@ public class VodController extends BaseController {
                    if(isPaused){
                        hideToolBar();
                    }else {
-                       hideBottom();
+                       hideSeekBar();
                    }
                }
                isKeyOn=false;
