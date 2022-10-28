@@ -1127,7 +1127,7 @@ public class VodController extends BaseController {
                    myHandle.postDelayed(myRunnable, myHandleSeconds);
                    isKeyOn = false;
                    return true;
-               }else if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN){
+               }else if(keyCode == KeyEvent.KEYCODE_DPAD_UP){
                    count=0;
                }
             }
