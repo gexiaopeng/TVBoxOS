@@ -1083,7 +1083,7 @@ public class VodController extends BaseController {
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
             } else if ( keyCode == KeyEvent.KEYCODE_DPAD_UP ) {
-               if(!isToolBarVisible()) {
+               if(!isBottomVisible()) {
                    showSeekBar(true);
                    myHandle.postDelayed(myRunnable, myHandleSeconds);
                }else{
