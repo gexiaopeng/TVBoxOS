@@ -1097,7 +1097,7 @@ public class VodController extends BaseController {
                return true;
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN  || keyCode== KeyEvent.KEYCODE_MENU) {
                 // Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",r:"+isToolBarVisible(), Toast.LENGTH_LONG).show();
-                if(!isToolBarVisible()) {
+                if(!isToolBarVisible() || !isBottomVisible()) {
                     showBottom();
                     myHandle.postDelayed(myRunnable, myHandleSeconds);
                 }else{
