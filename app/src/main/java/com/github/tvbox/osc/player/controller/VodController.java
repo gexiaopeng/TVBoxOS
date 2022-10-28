@@ -893,7 +893,7 @@ public class VodController extends BaseController {
             steep=curr-seekTo;
             mProgressIcon.setImageResource(R.drawable.icon_back);
         }
-        mProgressText.setText("["+ps+PlayerUtils.stringForTime(steep)+"]"+PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
+        mProgressText.setText(PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration)+"["+ps+PlayerUtils.stringForTime(steep)+"]");
         mHandler.sendEmptyMessage(1000);
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
