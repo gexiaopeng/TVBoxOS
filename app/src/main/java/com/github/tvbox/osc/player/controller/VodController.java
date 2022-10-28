@@ -1044,7 +1044,7 @@ public class VodController extends BaseController {
         if (super.onKeyEvent(event)) {
             return true;
         }
-        Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+",b:"+isBottomVisible()+",c:"+count, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",t:"+isToolBarVisible()+",b:"+isBottomVisible()+",c:"+count, Toast.LENGTH_LONG).show();
         int keyCode = event.getKeyCode();
         isPreviewBack=(keyCode==KeyEvent.KEYCODE_BACK);
         int action = event.getAction();
@@ -1127,6 +1127,8 @@ public class VodController extends BaseController {
                    myHandle.postDelayed(myRunnable, myHandleSeconds);
                    isKeyOn = false;
                    return true;
+               }else if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN){
+                   count=0;
                }
             }
             isKeyOn=false;
