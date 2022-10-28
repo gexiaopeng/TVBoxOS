@@ -200,6 +200,7 @@ public class VodController extends BaseController {
     List<Integer> list=new ArrayList();
     boolean isPreviewBack=false;
     private int width;
+    private int currentTime;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -321,7 +322,7 @@ public class VodController extends BaseController {
                 }
                 mSeekBar.setProgress(progress);
                 mTimeBar.setProgress(progress);
-                mTimeBar.setThumb(getThumb((int)(duration-newPosition)));
+                mTimeBar.setThumb(getThumb((int)(newPosition)));
             }
 
             @Override
@@ -824,12 +825,14 @@ public class VodController extends BaseController {
             }
         }
         mCurrentTime.setText(PlayerUtils.stringForTime(position));
-        mTotalTime.setText("-"+PlayerUtils.stringForTime(duration-position)+"/"+PlayerUtils.stringForTime(duration));
+        int totalTime=duration>0 ? duration:currentTime;
+        mTotalTime.setText("-"+PlayerUtils.stringForTime(duration-position)+"/"+PlayerUtils.stringForTime(totalTime));
         if (duration > 0) {
             mSeekBar.setEnabled(true);
             int pos = (int) (position * 1.0 / duration * mSeekBar.getMax());
             mSeekBar.setProgress(pos);
             mTimeBar.setProgress(pos);
+            currentTime=position;
             mTimeBar.setThumb(getThumb(position));
          } else {
             mSeekBar.setEnabled(false);
@@ -890,7 +893,7 @@ public class VodController extends BaseController {
             steep=curr-seekTo;
             mProgressIcon.setImageResource(R.drawable.icon_back);
         }
-        mProgressText.setText("("+ps+PlayerUtils.stringForTime(steep)+") "+PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
+        mProgressText.setText("["+ps+PlayerUtils.stringForTime(steep)+"]"+PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
         mHandler.sendEmptyMessage(1000);
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
