@@ -728,6 +728,7 @@ public class PlayActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+    @SuppressLint("NewApi")
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event != null) {
@@ -779,15 +780,10 @@ public class PlayActivity extends BaseActivity {
             hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
         }
         if (!hasNext) {
-            if(isProgress && mVodInfo!=null){
-                if(mVodInfo.seriesMap.get(mVodInfo.playFlag).size()>1) {
-                    Toast.makeText(this, "已经是最后一集了!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }else {
+            if(!isProgress || mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null || mVodInfo.seriesMap.get(mVodInfo.playFlag).size()>1) {
                 Toast.makeText(this, "已经是最后一集了!", Toast.LENGTH_SHORT).show();
-                return;
             }
+            return;
         }else {
             mVodInfo.playIndex++;
         }

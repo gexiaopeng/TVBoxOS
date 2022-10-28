@@ -807,7 +807,7 @@ public class PlayFragment extends BaseLazyFragment {
             hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
         }
         if (!hasNext) {
-            if(!isProgress || mVodInfo.seriesMap.get(mVodInfo.playFlag).size()>0) {
+            if(!isProgress || mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null || mVodInfo.seriesMap.get(mVodInfo.playFlag).size()>1) {
                 Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
             }
             return;

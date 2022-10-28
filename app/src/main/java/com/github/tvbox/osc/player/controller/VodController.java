@@ -1,5 +1,6 @@
 package com.github.tvbox.osc.player.controller;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.Intent;
@@ -56,7 +57,7 @@ import xyz.doikki.videoplayer.util.PlayerUtils;
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 
 public class VodController extends BaseController {
-    @RequiresApi(api = Build.VERSION_CODES.R)
+    @SuppressLint("NewApi")
     public VodController(@NonNull @NotNull Context context) {
         super(context);
         this.context=context;
@@ -1129,7 +1130,6 @@ public class VodController extends BaseController {
         }
         return true;
     }
-    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     public boolean onBackPressed() {
         this.isPreviewBack=false;
