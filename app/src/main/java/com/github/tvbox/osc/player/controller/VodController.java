@@ -75,8 +75,6 @@ public class VodController extends BaseController {
                         //mProgressRoot.setVisibility(VISIBLE);
                         hidePause();
                         showSeekBar(true);
-                        mTopRoot1.setVisibility(GONE);
-                        mTopRoot2.setVisibility(GONE);
                         break;
                     }
                     case 1001: { // seek 关闭
@@ -192,7 +190,7 @@ public class VodController extends BaseController {
 
     Handler myHandle;
     Runnable myRunnable;
-    int myHandleSeconds = 5000;//闲置多少毫秒秒关闭底栏  默认5秒
+    int myHandleSeconds = 4000;//闲置多少毫秒秒关闭底栏  默认4秒
     boolean isPaused=false;
     private Context context=null;
     boolean isUpdateSeekUI=false;
@@ -927,7 +925,7 @@ public class VodController extends BaseController {
                 mTopRoot2.setVisibility(GONE);
                 mPlayTitle.setVisibility(VISIBLE);
                 hideToolBar();
-                showSeekBar(false);//09-26
+                showSeekBar(true);//09-26
                 break;
             case VideoView.STATE_ERROR:
                 int playerType =0;
@@ -967,14 +965,17 @@ public class VodController extends BaseController {
         return mBottomRoot.getVisibility() == VISIBLE;
     }
     @RequiresApi(api = Build.VERSION_CODES.R)
-    void showSeekBar(boolean isRefresh){
+    void showSeekBar(boolean isShowTop){
          mMyseekBar.setVisibility(VISIBLE);
          mBottomRoot.setVisibility(VISIBLE);
          hideToolBar();
          setTopContainerWidth();
-         if(!isRefresh) {
+         if(isShowTop) {
              mTopRoot1.setVisibility(VISIBLE);
              mTopRoot2.setVisibility(VISIBLE);
+         }else{
+             mTopRoot1.setVisibility(GONE);
+             mTopRoot2.setVisibility(GONE);
          }
          mPlayTitle.setVisibility(GONE);
          mBottomRoot.requestFocus();
@@ -1057,7 +1058,7 @@ public class VodController extends BaseController {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if(count==1){
                     if (!isBottomVisible()) {
-                        showSeekBar(false);
+                        showSeekBar(true);
                     }
                     return true;
                 }
