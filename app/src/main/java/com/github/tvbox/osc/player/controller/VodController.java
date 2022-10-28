@@ -1082,10 +1082,9 @@ public class VodController extends BaseController {
                     return true;
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
-            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode== KeyEvent.KEYCODE_MENU) {
-               // Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",r:"+isToolBarVisible(), Toast.LENGTH_LONG).show();
+            } else if ( keyCode == KeyEvent.KEYCODE_DPAD_UP ) {
                if(!isToolBarVisible()) {
-                   showBottom();
+                   showSeekBar(true);
                    myHandle.postDelayed(myRunnable, myHandleSeconds);
                }else{
                    if(isPaused){
@@ -1096,6 +1095,20 @@ public class VodController extends BaseController {
                }
                isKeyOn=false;
                return true;
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN  || keyCode== KeyEvent.KEYCODE_MENU) {
+                // Toast.makeText(getContext(), "Action:"+event.getAction()+",Code:"+event.getKeyCode()+",r:"+isToolBarVisible(), Toast.LENGTH_LONG).show();
+                if(!isToolBarVisible()) {
+                    showBottom();
+                    myHandle.postDelayed(myRunnable, myHandleSeconds);
+                }else{
+                    if(isPaused){
+                        hideToolBar();
+                    }else {
+                        hideBottom();
+                    }
+                }
+                isKeyOn=false;
+                return true;
             }
         } else if (action == KeyEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
