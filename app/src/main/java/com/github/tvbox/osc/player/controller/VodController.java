@@ -1048,7 +1048,7 @@ public class VodController extends BaseController {
         int keyCode = event.getKeyCode();
         isPreviewBack=(keyCode==KeyEvent.KEYCODE_BACK);
         int action = event.getAction();
-        if (keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_LEFT) {
+        if (keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_LEFT && keyCode != KeyEvent.KEYCODE_DPAD_UP) {
             count=0;
         }
         if (isToolBarVisible() && isBottomVisible() && keyCode != KeyEvent.KEYCODE_DPAD_DOWN && keyCode != KeyEvent.KEYCODE_DPAD_UP && keyCode!= KeyEvent.KEYCODE_MENU) {
