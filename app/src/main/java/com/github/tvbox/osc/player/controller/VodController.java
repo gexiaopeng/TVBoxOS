@@ -191,7 +191,9 @@ public class VodController extends BaseController {
 
     Handler myHandle;
     Runnable myRunnable;
+    Runnable myNewPlayRunnable;
     int myHandleSeconds = 4000;//闲置多少毫秒秒关闭底栏  默认4秒
+    int waitTime=1000;//快进等待确认时间
     boolean isPaused=false;
     private Context context=null;
     boolean isUpdateSeekUI=false;
@@ -277,6 +279,14 @@ public class VodController extends BaseController {
                     hideToolBar();
                 }
             }
+        };
+       myNewPlayRunnable= new Runnable() {
+            @Override
+            public void run() {
+                if (isInPlaybackState()) {
+                    tvSlideStop();
+                }
+           }
         };
 
         mPlayPauseTime.post(new Runnable() {
@@ -1048,11 +1058,13 @@ public class VodController extends BaseController {
         int keyCode = event.getKeyCode();
         isPreviewBack=(keyCode==KeyEvent.KEYCODE_BACK);
         int action = event.getAction();
-        if (keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_LEFT && keyCode != KeyEvent.KEYCODE_DPAD_UP) {
+        if (!isPaused && keyCode != KeyEvent.KEYCODE_DPAD_RIGHT && keyCode != KeyEvent.KEYCODE_DPAD_LEFT && keyCode != KeyEvent.KEYCODE_DPAD_UP) {
             count=0;
         }
         if (isToolBarVisible() && isBottomVisible() && keyCode != KeyEvent.KEYCODE_DPAD_DOWN && keyCode != KeyEvent.KEYCODE_DPAD_UP && keyCode!= KeyEvent.KEYCODE_MENU) {
-            count=0;
+            if(!isPaused) {
+                count = 0;
+            }
             myHandle.postDelayed(myRunnable, myHandleSeconds);
             isKeyOn=false;
             return super.dispatchKeyEvent(event);
@@ -1067,6 +1079,7 @@ public class VodController extends BaseController {
                     return true;
                 }
                 if (isInPlayback) {
+                    mHandler.removeCallbacks(myNewPlayRunnable);
                     tvSlideStart(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 1 : -1);
                     return true;
                 }
@@ -1075,10 +1088,10 @@ public class VodController extends BaseController {
                     togglePlay();
                     return true;
                 }else if(isPaused){
-                    isPaused=false;
-                    hidePause();
-                    hideSeekBar();
-                    listener.replay(false);
+                   isPaused=false;
+                   hidePause();
+                   hideSeekBar();
+                   listener.replay(false);
                     return true;
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
@@ -1112,14 +1125,13 @@ public class VodController extends BaseController {
             }
         } else if (action == KeyEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                isKeyOn=false;
                 if(count==2){
-                     isKeyOn=false;
                     myHandle.postDelayed(myRunnable, myHandleSeconds);
                     return true;
                 }
                 if (isInPlayback) {
-                    tvSlideStop();
-                    isKeyOn=false;
+                    mHandler.postDelayed(myNewPlayRunnable,waitTime);
                     return true;
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode== KeyEvent.KEYCODE_MENU) {
@@ -1159,7 +1171,7 @@ public class VodController extends BaseController {
                 hideToolBar();
                 return true;
             }
-           isPaused=false;
+            isPaused=false;
             hidePause();
             hideSeekBar();
            if (isInPlaybackState()) {
