@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
@@ -60,7 +59,6 @@ import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.dialog.SubtitleDialog;
-import com.github.tvbox.osc.ui.fragment.PlayFragment;
 import com.github.tvbox.osc.util.AdBlocker;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -265,7 +263,7 @@ public class PlayActivity extends BaseActivity {
             mController.mPlayerTimeStartEndText.setVisibility(View.GONE);
             mController.mPlayerTimeStartBtn.setVisibility(View.GONE);
             mController.mPlayerTimeSkipBtn.setVisibility(View.GONE);
-            mController.mPlayerTimeStepBtn.setVisibility(View.GONE);
+           // mController.mPlayerTimeStepBtn.setVisibility(View.GONE);
             mController.mPlayerTimeResetBtn.setVisibility(View.GONE);
         }else {
             mController.mPlayerSpeedBtn.setVisibility(View.VISIBLE);
@@ -854,6 +852,7 @@ public class PlayActivity extends BaseActivity {
         String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex + vs.name;
         //重新播放清除现有进度
         if (reset) {
+            progressManager.deleteProgress();
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
             CacheManager.delete(MD5.string2MD5(subtitleCacheKey), 0);
         }

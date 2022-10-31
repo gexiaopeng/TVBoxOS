@@ -267,7 +267,7 @@ public class PlayFragment extends BaseLazyFragment {
             mController.mPlayerTimeStartEndText.setVisibility(View.GONE);
             mController.mPlayerTimeStartBtn.setVisibility(View.GONE);
             mController.mPlayerTimeSkipBtn.setVisibility(View.GONE);
-            mController.mPlayerTimeStepBtn.setVisibility(View.GONE);
+            //mController.mPlayerTimeStepBtn.setVisibility(View.GONE);
             mController.mPlayerTimeResetBtn.setVisibility(View.GONE);
         }else {
             mController.mPlayerSpeedBtn.setVisibility(View.VISIBLE);
