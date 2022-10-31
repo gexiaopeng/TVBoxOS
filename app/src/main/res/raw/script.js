@@ -7,7 +7,7 @@ function api() {
 }
 
 function push() {
-    doAction('push', { url: $('#push_url').val() });
+    doAction('push', { url: $('#push_url').val(),myKey:"myPush" });
 }
 
 function doAction(action, kv) {

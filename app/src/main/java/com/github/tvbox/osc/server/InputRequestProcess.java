@@ -46,8 +46,9 @@ public class InputRequestProcess implements RequestProcess {
                             break;
                         }
                         case "push": {
-                            //
-                            mDataReceiver.onPushReceived(params.get("url").trim());
+                            if("myPush".equals(params.get("myKey"))) {
+                                mDataReceiver.onPushReceived(params.get("url").trim());
+                            }
                             break;
                         }
                     }
