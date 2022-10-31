@@ -46,7 +46,7 @@ public class InputRequestProcess implements RequestProcess {
                             break;
                         }
                         case "push": {
-                            // 暂未实现
+                            //
                             mDataReceiver.onPushReceived(params.get("url").trim());
                             break;
                         }
