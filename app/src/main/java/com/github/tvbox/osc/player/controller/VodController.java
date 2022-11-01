@@ -202,6 +202,7 @@ public class VodController extends BaseController {
     boolean isPreviewBack=false;
     private int width;
     private int currentTime;
+    private boolean isPortrait=false;//是否竖屏
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
@@ -727,9 +728,11 @@ public class VodController extends BaseController {
     void setLandscapePortrait() {
         int requestedOrientation = mActivity.getRequestedOrientation();
         if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
+            isPortrait=true;
             mLandscapePortraitBtn.setText("横屏");
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         } else if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT || requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
+            isPortrait=false;
             mLandscapePortraitBtn.setText("竖屏");
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         }
@@ -1072,6 +1075,9 @@ public class VodController extends BaseController {
             }
             myHandle.postDelayed(myRunnable, myHandleSeconds);
             isKeyOn=false;
+            if(action == KeyEvent.ACTION_UP && keyCode==KeyEvent.KEYCODE_BACK){
+                return this.onBackPressed();
+            }
             return super.dispatchKeyEvent(event);
         }
         boolean isInPlayback = isInPlaybackState();
@@ -1147,6 +1153,8 @@ public class VodController extends BaseController {
                }else if(keyCode == KeyEvent.KEYCODE_DPAD_UP){
                    count=0;
                }
+            }else if(keyCode==KeyEvent.KEYCODE_BACK){
+                return this.onBackPressed();
             }
             isKeyOn=false;
         }
@@ -1165,8 +1173,10 @@ public class VodController extends BaseController {
         }
         return true;
     }
+    @SuppressLint("NewApi")
     @Override
     public boolean onBackPressed() {
+        isKeyOn=false;
         this.isPreviewBack=false;
          if (super.onBackPressed()) {
             return true;
@@ -1187,6 +1197,10 @@ public class VodController extends BaseController {
            return true;
         }else if (isBottomVisible() && !isPaused) {
             hideBottom();
+            return true;
+        }
+        if(isPortrait){
+            setLandscapePortrait();
             return true;
         }
         this.isPreviewBack=true;
