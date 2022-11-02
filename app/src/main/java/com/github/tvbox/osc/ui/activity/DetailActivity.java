@@ -799,6 +799,9 @@ public class DetailActivity extends BaseActivity {
                 return;
             }
         }
+        if(playFragment!=null) {
+            playFragment.release();
+        }
         super.onBackPressed();
     }
 

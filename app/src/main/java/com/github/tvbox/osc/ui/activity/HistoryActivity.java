@@ -49,7 +49,7 @@ public class HistoryActivity extends BaseActivity {
     @Override
     protected void init() {
         initView();
-        initData();
+        //initData();
     }
 
     private void toggleDelMode() {
@@ -208,7 +208,7 @@ public class HistoryActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshEvent event) {
         if (event.type == RefreshEvent.TYPE_HISTORY_REFRESH) {
-            initData();
+            //initData();
         }
     }
 
@@ -225,5 +225,12 @@ public class HistoryActivity extends BaseActivity {
             return;
         }
         super.onBackPressed();
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        initData();
+        //Toast.makeText(this,"resum",Toast.LENGTH_LONG).show();
+        //initData();
     }
 }

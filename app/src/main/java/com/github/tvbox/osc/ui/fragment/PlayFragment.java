@@ -1735,5 +1735,11 @@ public class PlayFragment extends BaseLazyFragment {
             callback.onReceiveValue(true);
         }
     }
-
+    public String release(){
+        if (mVideoView != null) {
+            mVideoView.release();
+            return mVideoView.getKey();
+        }
+        return "";
+    }
 }
