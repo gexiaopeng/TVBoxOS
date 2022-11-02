@@ -560,6 +560,9 @@ public class PlayFragment extends BaseLazyFragment {
                         }
                         hideTip();
                         PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg);
+                        if(progressKey==null && mVodInfo!=null){
+                            progressKey= mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playIndex +mVodInfo.name;
+                        }
                         mVideoView.setProgressKey(progressKey);
                         if (headers != null) {
                             mVideoView.setUrl(finalUrl, headers);
