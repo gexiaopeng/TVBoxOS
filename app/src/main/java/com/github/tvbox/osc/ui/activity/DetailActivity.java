@@ -800,7 +800,8 @@ public class DetailActivity extends BaseActivity {
             }
         }
         if(playFragment!=null) {
-            playFragment.release();
+            String st=playFragment.release();
+            Toast.makeText(this,st,Toast.LENGTH_LONG).show();
         }
         super.onBackPressed();
     }
