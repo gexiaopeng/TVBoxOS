@@ -779,6 +779,7 @@ public class DetailActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onBackPressed() {
        if (fullWindows) {
