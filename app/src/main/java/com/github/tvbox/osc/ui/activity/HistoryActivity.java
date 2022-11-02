@@ -12,10 +12,12 @@ import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.bean.Movie;
 import com.github.tvbox.osc.bean.VodInfo;
+import com.github.tvbox.osc.cache.CacheManager;
 import com.github.tvbox.osc.cache.RoomDataManger;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.ui.adapter.HistoryAdapter;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.MD5;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 
@@ -171,7 +173,32 @@ public class HistoryActivity extends BaseActivity {
         List<VodInfo> allVodRecord = RoomDataManger.getAllVodRecord(100);
         List<VodInfo> vodInfoList = new ArrayList<>();
         for (VodInfo vodInfo : allVodRecord) {
-            if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty())vodInfo.note = "上次看到" + vodInfo.playNote;
+            if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty()) {
+                String info="";
+                long rate=0;
+                String progressKey=vodInfo.sourceKey + vodInfo.id + vodInfo.playIndex + vodInfo.name;
+                try {
+                    Object cTime= CacheManager.getCache(MD5.string2MD5(progressKey));
+                    Object dTime= CacheManager.getCache(MD5.string2MD5(progressKey+"_Duration"));
+                    long c=cTime==null? 0: (long) cTime;
+                    long d=dTime==null? 0:(long) dTime;
+                    if(d==0){
+                        rate=0;
+                    }else{
+                        rate=Math.round((c*100.0f)/d);
+                    }
+                    if(rate<1){
+                        info="观看不足1%";
+                    }else if(rate<98){
+                        info="观看至"+rate+"%";
+                    }else{
+                        info="观看完";
+                    }
+                } catch (Exception e) {
+                    info=e.getMessage();
+                }
+                vodInfo.note = info;
+            }
             vodInfoList.add(vodInfo);
         }
         historyAdapter.setNewData(vodInfoList);

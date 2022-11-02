@@ -12,6 +12,7 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.Movie;
 import com.github.tvbox.osc.bean.VodInfo;
+import com.github.tvbox.osc.cache.CacheManager;
 import com.github.tvbox.osc.cache.RoomDataManger;
 import com.github.tvbox.osc.event.ServerEvent;
 import com.github.tvbox.osc.ui.activity.CollectActivity;
@@ -25,6 +26,7 @@ import com.github.tvbox.osc.ui.activity.SettingActivity;
 import com.github.tvbox.osc.ui.adapter.HomeHotVodAdapter;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.util.UA;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -97,8 +99,32 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 vod.sourceKey = vodInfo.sourceKey;
                 vod.name = vodInfo.name;
                 vod.pic = vodInfo.pic;
-                if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty())
-                    vod.note = "上次看到" + vodInfo.playNote;
+                if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty()) {
+                    String info="";
+                    long rate=0;
+                    String progressKey=vodInfo.sourceKey + vodInfo.id + vodInfo.playIndex + vodInfo.name;
+                    try {
+                        Object cTime= CacheManager.getCache(MD5.string2MD5(progressKey));
+                        Object dTime= CacheManager.getCache(MD5.string2MD5(progressKey+"_Duration"));
+                        long c=cTime==null? 0: (long) cTime;
+                        long d=dTime==null? 0:(long) dTime;
+                        if(d==0){
+                            rate=0;
+                        }else{
+                            rate=Math.round((c*100.0f)/d);
+                        }
+                        if(rate<1){
+                            info="观看不足1%";
+                        }else if(rate<98){
+                            info="观看至"+rate+"%";
+                        }else{
+                            info="观看完";
+                        }
+                    } catch (Exception e) {
+                        info=e.getMessage();
+                    }
+                    vod.note = info;
+                }
                 vodList.add(vod);
             }
             homeHotVodAdapter.setNewData(vodList);

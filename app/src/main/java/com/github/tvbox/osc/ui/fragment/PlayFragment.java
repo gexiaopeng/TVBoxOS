@@ -810,6 +810,8 @@ public class PlayFragment extends BaseLazyFragment {
         if (!hasNext) {
             if(!isProgress || mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null || mVodInfo.seriesMap.get(mVodInfo.playFlag).size()>1) {
                 Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(requireContext(), "播放结束!", Toast.LENGTH_SHORT).show();
             }
             return;
         }else {
@@ -877,7 +879,7 @@ public class PlayFragment extends BaseLazyFragment {
         initParseLoadFound();
         if(mVideoView!=null) mVideoView.release();
         String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex+ "-" + vs.name + "-subt";
-        String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex + vs.name;
+        String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playIndex +mVodInfo.name; //vs.name;
         //重新播放清除现有进度
         if (reset) {
             progressManager.deleteProgress();
