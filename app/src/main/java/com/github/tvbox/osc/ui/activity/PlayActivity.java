@@ -783,6 +783,8 @@ public class PlayActivity extends BaseActivity {
         if (!hasNext) {
             if(!isProgress || mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null || mVodInfo.seriesMap.get(mVodInfo.playFlag).size()>1) {
                 Toast.makeText(this, "已经是最后一集了!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, "观看结束!", Toast.LENGTH_SHORT).show();
             }
             return;
         }else {
