@@ -670,6 +670,7 @@ public class SourceViewModel extends ViewModel {
                 }
                 result.put("playUrl", playUrl);
                 result.put("flag", playFlag);
+                result.put("proKey", progressKey);
                 playResult.postValue(result);
             } catch (Throwable th) {
                 th.printStackTrace();
