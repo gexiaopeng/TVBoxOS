@@ -75,7 +75,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     protected AssetFileDescriptor mAssetFileDescriptor;//assets文件
 
     protected long mCurrentPosition;//当前正在播放视频的位置
-
+    private long mDuration;//当前正在播放视频的时间
     //播放器的各种状态
     public static final int STATE_ERROR = -1;
     public static final int STATE_IDLE = 0;
@@ -219,7 +219,6 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
         startPrepare(false);
         return true;
     }
-
     /**
      * 是否显示移动网络提示，可在Controller中配置
      */
@@ -407,7 +406,14 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     protected void saveProgress() {
         if (mProgressManager != null && mCurrentPosition > 0) {
             L.d("saveProgress: " + mCurrentPosition);
-            mProgressManager.saveProgress(mProgressKey == null ? mUrl : mProgressKey, mCurrentPosition);
+            String key=mProgressKey == null ? mUrl : mProgressKey;
+            mProgressManager.saveProgress(key, mCurrentPosition);
+            if(mDuration==0){
+                mDuration=getDuration();
+                if(mDuration>0){
+                    mProgressManager.saveProgress(key+"_Duration", mDuration);
+                }
+            }
         }
     }
 
@@ -571,11 +577,11 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     @Override
     public void onCompletion() {
         mPlayerContainer.setKeepScreenOn(false);
-        mCurrentPosition = 0;
-        if (mProgressManager != null) {
-            //播放完成，清除进度
-            mProgressManager.saveProgress(mProgressKey == null ? mUrl : mProgressKey, 0);
-        }
+//        mCurrentPosition = 0;
+//        if (mProgressManager != null) {
+//            //播放完成，清除进度
+//            mProgressManager.saveProgress(mProgressKey == null ? mUrl : mProgressKey, 0);
+//        }
         setPlayState(STATE_PLAYBACK_COMPLETED);
     }
 
