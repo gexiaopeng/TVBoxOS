@@ -221,7 +221,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
         return true;
     }
     public String getKey() {
-        return mProgressKey == null ? mUrl : mProgressKey;
+        return (mProgressKey == null ? mUrl : mProgressKey)+"|"+mtDuration;
     }
     /**
      * 是否显示移动网络提示，可在Controller中配置
@@ -479,7 +479,9 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     public long getCurrentPosition() {
         if (isInPlaybackState()) {
             mCurrentPosition = mMediaPlayer.getCurrentPosition();
-            mtDuration=mMediaPlayer.getDuration();
+            if(mtDuration==0) {
+                mtDuration = mMediaPlayer.getDuration();
+            }
             return mCurrentPosition;
         }
         return 0;
