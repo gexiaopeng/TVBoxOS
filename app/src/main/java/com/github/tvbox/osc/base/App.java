@@ -52,18 +52,10 @@ public class App extends MultiDexApplication {
         // Hawk
         Hawk.init(this).build();
         Hawk.put(HawkConfig.DEBUG_OPEN, false);
-        if (!Hawk.contains(HawkConfig.HOME_REC_STYLE)) {
-            Hawk.put(HawkConfig.HOME_REC_STYLE, true);
-        }
-        if (!Hawk.contains(HawkConfig.PLAY_TYPE)) {
-            Hawk.put(HawkConfig.PLAY_TYPE, 2);
-        }
-        if (!Hawk.contains(HawkConfig.IJK_CODEC)) {
-            Hawk.put(HawkConfig.IJK_CODEC, "硬解码");
-        }
-        if (!Hawk.contains(HawkConfig.HISTORY_NUM)) {
-            Hawk.put(HawkConfig.HISTORY_NUM, HistoryHelper.getHistoryNumArraySize()-1);
-        }
+        putDefault(HawkConfig.HOME_REC_STYLE,true);
+        putDefault(HawkConfig.PLAY_TYPE,2);
+        putDefault(HawkConfig.IJK_CODEC,"硬解码");
+        putDefault(HawkConfig.HISTORY_NUM,HistoryHelper.getHistoryNumArraySize()-1);
     }
 
     public static App getInstance() {
@@ -87,5 +79,10 @@ public class App extends MultiDexApplication {
 
     public Activity getCurrentActivity() {
         return AppManager.getInstance().currentActivity();
+    }
+    private void putDefault(String key, Object value) {
+        if (!Hawk.contains(key)) {
+            Hawk.put(key, value);
+        }
     }
 }
