@@ -24,10 +24,7 @@ import com.github.tvbox.osc.ui.activity.PushActivity;
 import com.github.tvbox.osc.ui.activity.SearchActivity;
 import com.github.tvbox.osc.ui.activity.SettingActivity;
 import com.github.tvbox.osc.ui.adapter.HomeHotVodAdapter;
-import com.github.tvbox.osc.util.FastClickCheckUtil;
-import com.github.tvbox.osc.util.HawkConfig;
-import com.github.tvbox.osc.util.MD5;
-import com.github.tvbox.osc.util.UA;
+import com.github.tvbox.osc.util.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -91,7 +88,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         }
         super.onFragmentResume();
         if (Hawk.get(HawkConfig.HOME_REC, 0) == 2) {
-            List<VodInfo> allVodRecord = RoomDataManger.getAllVodRecord(30);
+            List<VodInfo> allVodRecord = RoomDataManger.getAllVodRecord(HistoryHelper.getHisNum(0));
             List<Movie.Video> vodList = new ArrayList<>();
             for (VodInfo vodInfo : allVodRecord) {
                 Movie.Video vod = new Movie.Video();

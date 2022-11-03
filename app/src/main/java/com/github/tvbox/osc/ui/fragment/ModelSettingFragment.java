@@ -576,9 +576,10 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 FastClickCheckUtil.check(v);
                 int defaultPos = Hawk.get(HawkConfig.HISTORY_NUM, 0);
                 ArrayList<Integer> types = new ArrayList<>();
-                types.add(0);
-                types.add(1);
-                types.add(2);
+                int size=HistoryHelper.getHistoryNumArraySize();
+                for(int i=0;i<size;i++){
+                    types.add(i);
+                }
                 SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
                 dialog.setTip("保留历史记录数量");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
