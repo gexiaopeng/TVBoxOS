@@ -51,6 +51,7 @@ public class VodInfo implements Serializable {
     public String sourceKey;
     public String playerCfg = "";
     public boolean reverseSort = false;
+    private int seq=0;//列表原始排序 gxp 2022-11-3
 
     public void setVideo(Movie.Video video) {
         last = video.last;
@@ -110,7 +111,22 @@ public class VodInfo implements Serializable {
             Collections.reverse(seriesMap.get(flag));
         }
     }
-
+    public int getSeq(){
+        if(reverseSort){
+             if(seriesMap!=null){
+                 seq=(seriesMap.get(playFlag).size()-1)-playIndex;
+                 if(seq<0){
+                     seq=0;
+                 }
+             }
+         }else{
+             seq=playIndex;
+         }
+        return seq;
+    }
+    public void setSeq(int seq){
+        this.seq=seq;
+    }
     public static class VodSeriesFlag implements Serializable {
 
         public String name;

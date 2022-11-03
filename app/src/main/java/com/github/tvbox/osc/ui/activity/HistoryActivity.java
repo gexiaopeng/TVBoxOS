@@ -170,38 +170,48 @@ public class HistoryActivity extends BaseActivity {
     }
 
     private void initData() {
-        List<VodInfo> allVodRecord = RoomDataManger.getAllVodRecord(100);
-        List<VodInfo> vodInfoList = new ArrayList<>();
-        for (VodInfo vodInfo : allVodRecord) {
-            if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty()) {
-                String info="";
-                long rate=0;
-                String progressKey=vodInfo.sourceKey + vodInfo.id + vodInfo.playIndex + vodInfo.name;
-                try {
-                    Object cTime= CacheManager.getCache(MD5.string2MD5(progressKey));
-                    Object dTime= CacheManager.getCache(MD5.string2MD5(progressKey+"_Duration"));
-                    long c=cTime==null? 0: (long) cTime;
-                    long d=dTime==null? 0:(long) dTime;
-                    if(d==0){
-                        rate=0;
-                    }else{
-                        rate=Math.round((c*100.0f)/d);
+        List<VodInfo> allVodRecord =null;
+        try {
+            allVodRecord=RoomDataManger.getAllVodRecord(100);
+            List<VodInfo> vodInfoList = new ArrayList<>();
+            if(allVodRecord!=null) {
+                for (VodInfo vodInfo : allVodRecord) {
+                    if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty()) {
+                        String info = "";
+                        long rate = 0;
+                        String progressKey = vodInfo.sourceKey + vodInfo.id + "_" + vodInfo.getSeq() + vodInfo.name;
+                        Object cTime = null;
+                        Object dTime = null;
+                        try {
+                            cTime = CacheManager.getCache(MD5.string2MD5(progressKey));
+                            dTime = CacheManager.getCache(MD5.string2MD5(progressKey + "_Duration"));
+                            long c = cTime == null ? 0 : (long) cTime;
+                            long d = dTime == null ? 0 : (long) dTime;
+                            if (d < 1) {
+                                rate = 0;
+                            } else {
+                                rate = Math.round((c * 100.0f) / d);
+                            }
+                            if (rate < 1) {
+                                info = "观看不足1%";
+                            } else if (rate < 98) {
+                                info = "观看至" + rate + "%";
+                            } else {
+                                info = "观看完";
+                            }
+                        } catch (Exception e) {
+                            info = e.getMessage();
+                        }
+                        vodInfo.note = info;
                     }
-                    if(rate<1){
-                        info="观看不足1%";
-                    }else if(rate<98){
-                        info="观看至"+rate+"%";
-                    }else{
-                        info="观看完";
-                    }
-                } catch (Exception e) {
-                    info=e.getMessage();
+                    vodInfoList.add(vodInfo);
                 }
-                vodInfo.note = info;
+                historyAdapter.setNewData(vodInfoList);
             }
-            vodInfoList.add(vodInfo);
+        } catch (Throwable e) {
+            Toast.makeText(this,e.getMessage()+"|"+allVodRecord,Toast.LENGTH_LONG).show();
         }
-        historyAdapter.setNewData(vodInfoList);
+
     }
 
 

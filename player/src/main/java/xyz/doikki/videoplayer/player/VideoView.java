@@ -76,7 +76,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
 
     protected long mCurrentPosition;//当前正在播放视频的位置
     private long mDuration;//当前正在播放视频的时间
-    private long mtDuration;//当前正在播放视频的时间
+    //private long mtDuration;//当前正在播放视频的时间
     //播放器的各种状态
     public static final int STATE_ERROR = -1;
     public static final int STATE_IDLE = 0;
@@ -221,7 +221,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
         return true;
     }
     public String getKey() {
-        return (mProgressKey == null ? mUrl : mProgressKey)+"|"+mtDuration;
+        return (mProgressKey == null ? mUrl : mProgressKey)+"|"+mDuration;
     }
     /**
      * 是否显示移动网络提示，可在Controller中配置
@@ -412,12 +412,10 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
             L.d("saveProgress: " + mCurrentPosition);
             String key=mProgressKey == null ? mUrl : mProgressKey;
             mProgressManager.saveProgress(key, mCurrentPosition);
-            if(mDuration==0){
-                mDuration=mtDuration;
-                if(mDuration>0){
-                    mProgressManager.saveProgress(key+"_Duration", mDuration);
-                }
+            if(mDuration>0){
+                mProgressManager.saveProgress(key+"_Duration", mDuration);
             }
+
         }
     }
 
@@ -479,9 +477,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     public long getCurrentPosition() {
         if (isInPlaybackState()) {
             mCurrentPosition = mMediaPlayer.getCurrentPosition();
-            if(mtDuration==0) {
-                mtDuration = mMediaPlayer.getDuration();
-            }
+            mDuration= mMediaPlayer.getDuration();
             return mCurrentPosition;
         }
         return 0;

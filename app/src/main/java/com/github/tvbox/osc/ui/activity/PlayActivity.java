@@ -151,10 +151,8 @@ public class PlayActivity extends BaseActivity {
         mController.setEnableInNormal(true);
         mController.setGestureEnabled(true);
         progressManager = new ProgressManager() {
-            private String key;
             @Override
             public void saveProgress(String url, long progress) {
-                this.key=url;
                 if (videoDuration ==0) return;
                 CacheManager.save(MD5.string2MD5(url), progress);
             }
@@ -176,13 +174,7 @@ public class PlayActivity extends BaseActivity {
                     return skip;
                 return rec;
             }
-            @Override
-            public void deleteProgress(){
-                if(this.key!=null){
-                    CacheManager.delete(MD5.string2MD5(key),0);
-                }
-            }
-        };
+         };
         mVideoView.setProgressManager(progressManager);
         mController.setListener(new VodController.VodControlListener() {
             @Override
@@ -558,6 +550,9 @@ public class PlayActivity extends BaseActivity {
                         }
                         hideTip();
                         PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg);
+                        if(progressKey==null && mVodInfo!=null){
+                            progressKey= mVodInfo.sourceKey + mVodInfo.id + "_"+mVodInfo.getSeq() + mVodInfo.name;
+                        }
                         mVideoView.setProgressKey(progressKey);
                         if (headers != null) {
                             mVideoView.setUrl(finalUrl, headers);
@@ -851,10 +846,9 @@ public class PlayActivity extends BaseActivity {
         initParseLoadFound();
         if(mVideoView!=null) mVideoView.release();
         String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex+ "-" + vs.name + "-subt";
-        String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playIndex + mVodInfo.name;
+        String progressKey = mVodInfo.sourceKey + mVodInfo.id + "_"+mVodInfo.getSeq() + mVodInfo.name;
         //重新播放清除现有进度
         if (reset) {
-            progressManager.deleteProgress();
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
             CacheManager.delete(MD5.string2MD5(subtitleCacheKey), 0);
         }

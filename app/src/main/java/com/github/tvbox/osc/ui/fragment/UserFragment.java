@@ -102,7 +102,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty()) {
                     String info="";
                     long rate=0;
-                    String progressKey=vodInfo.sourceKey + vodInfo.id + vodInfo.playIndex + vodInfo.name;
+                    String progressKey=vodInfo.sourceKey + vodInfo.id + "_"+vodInfo.getSeq() + vodInfo.name;
                     try {
                         Object cTime= CacheManager.getCache(MD5.string2MD5(progressKey));
                         Object dTime= CacheManager.getCache(MD5.string2MD5(progressKey+"_Duration"));

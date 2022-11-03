@@ -952,7 +952,7 @@ public class VodController extends BaseController {
             case VideoView.STATE_ERROR:
                 int playerType =0;
                 try {
-                    playerType=playerType=mPlayerConfig.getInt("pl");
+                    playerType=mPlayerConfig.getInt("pl");
                 } catch (JSONException e) {
                 }
                 int rePlayTypeType=getRePlayType(playerType);

@@ -195,7 +195,7 @@ public class DetailActivity extends BaseActivity {
                     isReverse = !isReverse;
                     vodInfo.reverse();
                     vodInfo.playIndex=(vodInfo.seriesMap.get(vodInfo.playFlag).size()-1)-vodInfo.playIndex;
-//                    insertVod(sourceKey, vodInfo);
+                    insertVod(sourceKey, vodInfo);
                     firstReverse = true;
                     seriesAdapter.notifyDataSetChanged();
                 }
@@ -754,7 +754,17 @@ public class DetailActivity extends BaseActivity {
 
     private void insertVod(String sourceKey, VodInfo vodInfo) {
         try {
-            vodInfo.playNote = vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).name;
+            int  seq=vodInfo.playIndex;
+            if(vodInfo.seriesMap!=null) {
+                vodInfo.playNote = vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).name;
+                if(vodInfo.reverseSort){
+                   seq=(vodInfo.seriesMap.get(vodInfo.playFlag).size()-1)-vodInfo.playIndex;
+                    if(seq<0){
+                        seq=0;
+                    }
+                }
+           }
+            vodInfo.setSeq(seq);
         } catch (Throwable th) {
             vodInfo.playNote = "";
         }
