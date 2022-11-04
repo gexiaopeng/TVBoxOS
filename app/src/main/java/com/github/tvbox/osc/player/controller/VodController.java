@@ -137,14 +137,8 @@ public class VodController extends BaseController {
                    }else if(width>1800){
                        rate=(int)(width*0.90);
                    }
-                   mHandler.post(new Runnable() {
-                       @Override
-                       public void run() {
-                           Toast.makeText(context,"is:"+isPortrait+"|"+width,Toast.LENGTH_LONG).show();
-                       }
-                   });
                    if(isPortrait){
-                       rate=(int)(rate*0.98);
+                       rate=(int)(rate*0.95);
                    }
                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rate, LinearLayout.LayoutParams.MATCH_PARENT);
                    mTopRoot1.setLayoutParams(lp);
