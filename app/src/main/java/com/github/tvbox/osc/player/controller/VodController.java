@@ -101,7 +101,9 @@ public class VodController extends BaseController {
                         break;
                     }
                     case 1003: { // 隐藏底部菜单
-                        mBottomRoot.setVisibility(GONE);
+                        if(!fromLongPress) {
+                            mBottomRoot.setVisibility(GONE);
+                        }
                         hideToolBar();
                         mTopRoot1.setVisibility(GONE);
                         mTopRoot2.setVisibility(GONE);
@@ -289,9 +291,7 @@ public class VodController extends BaseController {
             @Override
             public void run() {
                 if(!isPaused){
-                    if(!fromLongPress) {
-                        hideBottom();
-                    }
+                    hideBottom();
                 }else if(isToolBarVisible()){
                     hideToolBar();
                 }
@@ -453,7 +453,7 @@ public class VodController extends BaseController {
                         speed += 1.0f;
                     }
                     if (speed > 4)
-                        speed = 0.5f;
+                        speed = 1.0f;
                     mPlayerConfig.put("sp", speed);
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
@@ -469,11 +469,17 @@ public class VodController extends BaseController {
             @Override
             public boolean onLongClick(View view) {
                 try {
-                    mPlayerConfig.put("sp", 1.0f);
+                    float speed = (float) mPlayerConfig.getDouble("sp");
+                    if(speed==1.0f){
+                        speed=0.5f;
+                    }else{
+                        speed=1.0f;
+                    }
+                    mPlayerConfig.put("sp", speed);
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
-                    speed_old = 1.0f;
-                    mControlWrapper.setSpeed(1.0f);
+                    speed_old=speed;
+                    mControlWrapper.setSpeed(speed);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
