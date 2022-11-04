@@ -12,9 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -52,6 +50,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import java.util.Date;
@@ -137,6 +136,9 @@ public class VodController extends BaseController {
                        rate=(int)(width*0.89);
                    }else if(width>1800){
                        rate=(int)(width*0.90);
+                   }
+                   if(isPortrait){
+                       rate=(int)(rate*0.99);
                    }
                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rate, LinearLayout.LayoutParams.MATCH_PARENT);
                    mTopRoot1.setLayoutParams(lp);
@@ -443,8 +445,12 @@ public class VodController extends BaseController {
                 myHandle.postDelayed(myRunnable, myHandleSeconds);
                 try {
                     float speed = (float) mPlayerConfig.getDouble("sp");
-                    speed += 0.25f;
-                    if (speed > 3)
+                    if(speed==0.5f){
+                        speed=1.0f;
+                    }else {
+                        speed += 1.0f;
+                    }
+                    if (speed > 4)
                         speed = 0.5f;
                     mPlayerConfig.put("sp", speed);
                     updatePlayerCfgView();
@@ -786,7 +792,7 @@ public class VodController extends BaseController {
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
             mPlayerTimeSkipBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("et") * 1000));
-            mAudioTrackBtn.setVisibility((playerType == 1) ? VISIBLE : GONE);
+            //mAudioTrackBtn.setVisibility((playerType == 1) ? VISIBLE : GONE);
         } catch (JSONException e) {
             e.printStackTrace();
         }
