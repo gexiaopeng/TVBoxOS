@@ -196,8 +196,11 @@ public class DetailActivity extends BaseActivity {
                     vodInfo.reverse();
                     vodInfo.playIndex=(vodInfo.seriesMap.get(vodInfo.playFlag).size()-1)-vodInfo.playIndex;
                     insertVod(sourceKey, vodInfo);
-                    App.getInstance().setVodInfo(vodInfo);
-                    firstReverse = true;
+                    //App.getInstance().setVodInfo(vodInfo);
+                    VodInfo vino=App.getInstance().getVodInfo();
+                    vino.playIndex=vodInfo.playIndex;
+                    vino.reverseSort=vodInfo.reverseSort;
+                    //firstReverse = true;
                     seriesAdapter.notifyDataSetChanged();
                 }
             }
