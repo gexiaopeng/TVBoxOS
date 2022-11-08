@@ -1056,16 +1056,17 @@ public class VodController extends BaseController {
         VodInfo mVodInfo = App.getInstance().getVodInfo();
         int size=mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
         sToolBar.setVisibility(VISIBLE);
+        //Toast.makeText(context,"s:"+mVodInfo.reverseSort,Toast.LENGTH_LONG).show();
         if(size>1) {
-            if(mVodInfo.playIndex+1<size){
+            if((!mVodInfo.reverseSort && mVodInfo.playIndex+1<size) || (mVodInfo.reverseSort && mVodInfo.playIndex>0)){
                 mNextBtn.setVisibility(VISIBLE);
                 mNextBtn.requestFocus();
             }else{
                 mNextBtn.setVisibility(GONE);
             }
-            if(mVodInfo.playIndex!=0){
+            if((!mVodInfo.reverseSort && mVodInfo.playIndex>0) || (mVodInfo.reverseSort && mVodInfo.playIndex+1<size)){
                 mPreBtn.setVisibility(VISIBLE);
-                if(mVodInfo.playIndex+1==size){
+                if(mNextBtn.getVisibility()==GONE){
                     mPreBtn.requestFocus();
                 }
             }else{

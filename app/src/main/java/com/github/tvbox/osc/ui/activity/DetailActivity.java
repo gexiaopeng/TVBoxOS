@@ -196,6 +196,7 @@ public class DetailActivity extends BaseActivity {
                     vodInfo.reverse();
                     vodInfo.playIndex=(vodInfo.seriesMap.get(vodInfo.playFlag).size()-1)-vodInfo.playIndex;
                     insertVod(sourceKey, vodInfo);
+                    App.getInstance().setVodInfo(vodInfo);
                     firstReverse = true;
                     seriesAdapter.notifyDataSetChanged();
                 }
@@ -403,6 +404,7 @@ public class DetailActivity extends BaseActivity {
                     previewVodInfo.playFlag = vodInfo.playFlag;
                     previewVodInfo.playIndex = vodInfo.playIndex;
                     previewVodInfo.seriesMap = vodInfo.seriesMap;
+                    previewVodInfo.reverseSort=vodInfo.reverseSort;
 //                    bundle.putSerializable("VodInfo", previewVodInfo);
                     App.getInstance().setVodInfo(previewVodInfo);
                 }

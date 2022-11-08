@@ -769,11 +769,12 @@ public class PlayActivity extends BaseActivity {
     private SourceBean sourceBean;
 
     private void playNext(boolean isProgress) {
+        mVodInfo = App.getInstance().getVodInfo();
         boolean hasNext = true;
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasNext = false;
         } else {
-            hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
+            hasNext = (!mVodInfo.reverseSort && mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size()) || (mVodInfo.reverseSort && mVodInfo.playIndex >0);
         }
         if (!hasNext) {
             if(!isProgress || mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null || mVodInfo.seriesMap.get(mVodInfo.playFlag).size()>1) {
@@ -783,23 +784,32 @@ public class PlayActivity extends BaseActivity {
             }
             return;
         }else {
-            mVodInfo.playIndex++;
+            if(mVodInfo.reverseSort){
+                mVodInfo.playIndex--;
+            }else {
+                mVodInfo.playIndex++;
+            }
         }
         play(false);
     }
 
     private void playPrevious() {
+        mVodInfo = App.getInstance().getVodInfo();
         boolean hasPre = true;
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasPre = false;
         } else {
-            hasPre = mVodInfo.playIndex - 1 >= 0;
+            hasPre = (!mVodInfo.reverseSort && mVodInfo.playIndex - 1 >= 0) || (mVodInfo.reverseSort && mVodInfo.playIndex +1 <mVodInfo.seriesMap.get(mVodInfo.playFlag).size()) ;
         }
         if (!hasPre) {
             Toast.makeText(this, "已经是第一集了!", Toast.LENGTH_SHORT).show();
             return;
         }
-        mVodInfo.playIndex--;
+        if(mVodInfo.reverseSort){
+            mVodInfo.playIndex++;
+        }else {
+            mVodInfo.playIndex--;
+        }
         play(false);
     }
 
