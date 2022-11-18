@@ -302,7 +302,7 @@
         android:id="@+id/previewPlayerBlock"
         android:layout_width="@dimen/vs_480"
         android:layout_height="@dimen/vs_320"
-        android:focusable="true"
+        android:focusable="false"
         android:background="@drawable/preview_player_block"
         android:layout_marginStart="@dimen/vs_50"
         android:layout_marginLeft="@dimen/vs_50"
