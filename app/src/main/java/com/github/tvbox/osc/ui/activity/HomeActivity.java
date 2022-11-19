@@ -653,7 +653,7 @@ public class HomeActivity extends BaseActivity {
 
                 @Override
                 public boolean areContentsTheSame(@NonNull @NotNull SourceBean oldItem, @NonNull @NotNull SourceBean newItem) {
-                    return oldItem.getKey().equals(newItem.getKey());
+                    return oldItem.getKey().toLowerCase().equalsIgnoreCase(newItem.getKey());
                 }
             }, sites, sites.indexOf(ApiConfig.get().getHomeSourceBean()));
             dialog.show();

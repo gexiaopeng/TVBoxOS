@@ -49,16 +49,18 @@ public class SelectDialog<T> extends BaseDialog {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void run() {
-                tvRecyclerView.scrollToPosition(select);
-                tvRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
-                        super.onScrollStateChanged(recyclerView, newState);
-                        if(newState==RecyclerView.SCROLL_STATE_IDLE){
-                            tvRecyclerView.requestFocus(select);
-                        }
-                    }
-                });
+                //tvRecyclerView.scrollToPosition(select);
+               tvRecyclerView.smoothScrollToPositionWithOffset(select,0,true);
+
+//                tvRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//                    @Override
+//                    public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
+//                        super.onScrollStateChanged(recyclerView, newState);
+//                        if(newState==RecyclerView.SCROLL_STATE_IDLE){
+//                            tvRecyclerView.requestFocus(select);
+//                        }
+//                    }
+//                });
             }
         });
     }
