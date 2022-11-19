@@ -39,7 +39,12 @@ import com.github.tvbox.osc.ui.adapter.SeriesAdapter;
 import com.github.tvbox.osc.ui.adapter.SeriesFlagAdapter;
 import com.github.tvbox.osc.ui.dialog.QuickSearchDialog;
 import com.github.tvbox.osc.ui.fragment.PlayFragment;
-import com.github.tvbox.osc.util.*;
+import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.LOG;
+import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.util.SearchHelper;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -182,7 +187,6 @@ public class DetailActivity extends BaseActivity {
         }
         //禁用播放地址焦点
         tvPlayUrl.setFocusable(false);
-        llPlayerFragmentContainerBlock.setOnClickListener((view -> toggleFullPreview()));
         tvSort.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -827,17 +831,18 @@ public class DetailActivity extends BaseActivity {
         return super.dispatchKeyEvent(event);
     }
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (showPreview && !fullWindows) {
-//            Rect editTextRect = new Rect();
-//            llPlayerFragmentContainerBlock.getHitRect(editTextRect);
-//            if (editTextRect.contains((int) ev.getX(), (int) ev.getY())) {
-//                return true;
-//            }
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (showPreview && !fullWindows) {
+            Rect editTextRect = new Rect();
+            llPlayerFragmentContainerBlock.getHitRect(editTextRect);
+            if (editTextRect.contains((int) ev.getX(), (int) ev.getY())) {
+                toggleFullPreview();
+                return true;
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 
     // preview
     VodInfo previewVodInfo = null;

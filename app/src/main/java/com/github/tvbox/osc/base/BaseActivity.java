@@ -8,10 +8,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.PermissionChecker;
@@ -41,7 +43,7 @@ import xyz.doikki.videoplayer.util.CutoutUtil;
 public abstract class BaseActivity extends AppCompatActivity implements CustomAdapt {
     protected Context mContext;
     private LoadService mLoadService;
-
+    private Handler handler=new Handler();
     private static float screenRatio = -100.0f;
 
     @Override
@@ -134,7 +136,14 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
             mLoadService.showSuccess();
         }
     }
-
+    protected  void showMsg(String msg){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
+            }
+        });
+   }
     @Override
     protected void onDestroy() {
         super.onDestroy();
