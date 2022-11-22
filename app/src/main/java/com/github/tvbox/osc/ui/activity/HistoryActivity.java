@@ -2,8 +2,10 @@ package com.github.tvbox.osc.ui.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import android.widget.Toast;
@@ -245,5 +247,27 @@ public class HistoryActivity extends BaseActivity {
         initData();
         //Toast.makeText(this,"resum",Toast.LENGTH_LONG).show();
         //initData();
+    }
+    private void popupMenu(View view){
+        PopupMenu popup = new PopupMenu(HistoryActivity.this,view);
+        popup.getMenuInflater().inflate(R.menu.menu_pop, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                String info = "";
+                switch (item.getItemId()){
+                    case R.id.saosao:
+                        info = "你点了扫一扫";
+                        break;
+                    case R.id.add:
+                        info = "你点了添加";
+                        break;
+                }
+                showMsg(info);
+                return true;
+            }
+        });
+        popup.show();
+
     }
 }
