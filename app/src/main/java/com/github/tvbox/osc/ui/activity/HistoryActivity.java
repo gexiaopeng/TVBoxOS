@@ -48,7 +48,7 @@ public class HistoryActivity extends BaseActivity {
     private TvRecyclerView mGridView;
     private HistoryAdapter historyAdapter;
     private boolean delMode = false;
-    private int curPosition=0;
+    private int curPosition=-1;
 
     @Override
     protected int getLayoutResID() {
@@ -93,7 +93,7 @@ public class HistoryActivity extends BaseActivity {
             @Override
             public boolean onInBorderKeyEvent(int direction, View focused) {
                 if (direction == View.FOCUS_UP) {
-                    curPosition=0;
+                    curPosition=-1;
                     tvDel.setFocusable(true);
                     tvDelAll.setFocusable(true);
                     tvDel.requestFocus();
@@ -226,11 +226,11 @@ public class HistoryActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         boolean ret=super.onKeyDown(keyCode,event);
-        showMsg("-keyCode:"+keyCode+",ret:"+ret+",p:"+curPosition);
+        //showMsg("-keyCode:"+keyCode+",ret:"+ret+",p:"+curPosition);
         if(ret){
             return true;
         }
-        if(keyCode==KeyEvent.KEYCODE_MENU && curPosition>0){
+        if(keyCode==KeyEvent.KEYCODE_MENU && curPosition>=0){
             showDelDialog();
             return true;
         }
@@ -246,10 +246,12 @@ public class HistoryActivity extends BaseActivity {
             @Override
             public void click(Integer value, int pos) {
                 try {
+                    int p=curPosition;
+                    curPosition=-1;
                     dialog.cancel();
                     if(value==1){
-                        VodInfo vodInfo = historyAdapter.getData().get(curPosition);
-                        historyAdapter.remove(curPosition);
+                        VodInfo vodInfo = historyAdapter.getData().get(p);
+                        historyAdapter.remove(p);
                         RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
                     }else{
                         delAll();

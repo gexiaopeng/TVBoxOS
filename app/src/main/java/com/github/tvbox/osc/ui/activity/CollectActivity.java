@@ -40,7 +40,7 @@ public class CollectActivity extends BaseActivity {
     private TvRecyclerView mGridView;
     private CollectAdapter collectAdapter;
     private boolean delMode = false;
-    private int curPosition=0;
+    private int curPosition=-1;
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_collect;
@@ -89,7 +89,7 @@ public class CollectActivity extends BaseActivity {
             @Override
             public boolean onInBorderKeyEvent(int direction, View focused) {
                 if (direction == View.FOCUS_UP) {
-                    curPosition=0;
+                    curPosition=-1;
                     tvDel.setFocusable(true);
                     tvDelAll.setFocusable(true);
                     tvDel.requestFocus();
@@ -100,6 +100,7 @@ public class CollectActivity extends BaseActivity {
         mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                curPosition=position;
                 itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             }
 
@@ -187,7 +188,7 @@ public class CollectActivity extends BaseActivity {
         if(super.onKeyDown(keyCode,event)){
             return true;
         }
-        if(keyCode==KeyEvent.KEYCODE_MENU && curPosition>0){
+        if(keyCode==KeyEvent.KEYCODE_MENU && curPosition>=0){
             showDelDialog();
             return true;
         }
@@ -203,10 +204,12 @@ public class CollectActivity extends BaseActivity {
             @Override
             public void click(Integer value, int pos) {
                 try {
+                    int p=curPosition;
+                    curPosition=-1;
                     dialog.cancel();
                     if(value==1){
-                        VodCollect vodInfo = collectAdapter.getData().get(curPosition);
-                        collectAdapter.remove(curPosition);
+                        VodCollect vodInfo = collectAdapter.getData().get(p);
+                        collectAdapter.remove(p);
                         RoomDataManger.deleteVodCollect(vodInfo.getId());
                     }else{
                         delAll();
