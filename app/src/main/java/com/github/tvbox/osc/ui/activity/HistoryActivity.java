@@ -104,6 +104,7 @@ public class HistoryActivity extends BaseActivity {
         mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                curPosition=position;
                 itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             }
 
@@ -225,7 +226,7 @@ public class HistoryActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         boolean ret=super.onKeyDown(keyCode,event);
-        showMsg("-keyCode:"+keyCode+",ret:"+ret);
+        showMsg("-keyCode:"+keyCode+",ret:"+ret+",p:"+curPosition);
         if(ret){
             return true;
         }
