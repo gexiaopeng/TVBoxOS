@@ -250,9 +250,11 @@ public class HistoryActivity extends BaseActivity {
                     curPosition=-1;
                     dialog.cancel();
                     if(value==1){
-                        VodInfo vodInfo = historyAdapter.getData().get(p);
-                        historyAdapter.remove(p);
-                        RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+                        if(p>=0) {
+                            VodInfo vodInfo = historyAdapter.getData().get(p);
+                            historyAdapter.remove(p);
+                            RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+                        }
                     }else{
                         delAll();
                     }

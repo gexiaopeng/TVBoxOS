@@ -208,9 +208,11 @@ public class CollectActivity extends BaseActivity {
                     curPosition=-1;
                     dialog.cancel();
                     if(value==1){
-                        VodCollect vodInfo = collectAdapter.getData().get(p);
-                        collectAdapter.remove(p);
-                        RoomDataManger.deleteVodCollect(vodInfo.getId());
+                        if(p>=0) {
+                            VodCollect vodInfo = collectAdapter.getData().get(p);
+                            collectAdapter.remove(p);
+                            RoomDataManger.deleteVodCollect(vodInfo.getId());
+                        }
                     }else{
                         delAll();
                     }
