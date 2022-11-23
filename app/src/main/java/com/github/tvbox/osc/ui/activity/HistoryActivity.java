@@ -224,7 +224,9 @@ public class HistoryActivity extends BaseActivity {
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(super.onKeyDown(keyCode,event)){
+        boolean ret=super.onKeyDown(keyCode,event);
+        showMsg("-keyCode:"+keyCode+",ret:"+ret);
+        if(ret){
             return true;
         }
         if(keyCode==KeyEvent.KEYCODE_MENU && curPosition>0){
