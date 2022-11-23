@@ -84,7 +84,7 @@ public class SelectDialogAdapter<T> extends ListAdapter<T, SelectDialogAdapter.S
         TextView view=holder.itemView.findViewById(R.id.tvName);
         if (position == select) {
             name = "√ " + name;
-            //view.requestFocus();
+            view.requestFocus();
         }
         view.setText(name);
         holder.itemView.setOnClickListener(new View.OnClickListener() {

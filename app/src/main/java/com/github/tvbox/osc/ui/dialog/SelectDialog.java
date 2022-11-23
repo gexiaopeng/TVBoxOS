@@ -50,7 +50,9 @@ public class SelectDialog<T> extends BaseDialog {
             @Override
             public void run() {
                 //tvRecyclerView.scrollToPosition(select);
-                tvRecyclerView.smoothScrollToPositionWithOffset(select,0,true);
+                if(select>=0) {
+                    tvRecyclerView.smoothScrollToPositionWithOffset(select, 0, true);
+                }
                 //tvRecyclerView.scrollToPositionWithOffset(select,0,true);
 
 //                tvRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

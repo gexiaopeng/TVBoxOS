@@ -3,10 +3,13 @@ package com.github.tvbox.osc.ui.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
@@ -16,6 +19,8 @@ import com.github.tvbox.osc.cache.RoomDataManger;
 import com.github.tvbox.osc.cache.VodCollect;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.ui.adapter.CollectAdapter;
+import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
+import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
@@ -23,6 +28,7 @@ import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +40,7 @@ public class CollectActivity extends BaseActivity {
     private TvRecyclerView mGridView;
     private CollectAdapter collectAdapter;
     private boolean delMode = false;
-
+    private int curPosition=0;
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_collect;
@@ -83,6 +89,7 @@ public class CollectActivity extends BaseActivity {
             @Override
             public boolean onInBorderKeyEvent(int direction, View focused) {
                 if (direction == View.FOCUS_UP) {
+                    curPosition=0;
                     tvDel.setFocusable(true);
                     tvDelAll.setFocusable(true);
                     tvDel.requestFocus();
@@ -98,6 +105,7 @@ public class CollectActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                curPosition=position;
                 itemView.animate().scaleX(1.05f).scaleY(1.05f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             }
 
@@ -173,5 +181,63 @@ public class CollectActivity extends BaseActivity {
             return;
         }
         super.onBackPressed();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(super.onKeyDown(keyCode,event)){
+            return true;
+        }
+        if(keyCode==KeyEvent.KEYCODE_MENU && curPosition>0){
+            showDelDialog();
+            return true;
+        }
+        return false;
+    }
+    private void showDelDialog(){
+        SelectDialog<Integer> dialog = new SelectDialog<>(CollectActivity.this);
+        List<Integer> list=new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        dialog.setTip("");
+        dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+            @Override
+            public void click(Integer value, int pos) {
+                try {
+                    dialog.cancel();
+                    if(value==1){
+                        VodCollect vodInfo = collectAdapter.getData().get(curPosition);
+                        collectAdapter.remove(curPosition);
+                        RoomDataManger.deleteVodCollect(vodInfo.getId());
+                    }else{
+                        delAll();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public String getDisplay(Integer val) {
+                return val==1?"删除选中收藏":"清空所有收藏";
+            }
+        }, new DiffUtil.ItemCallback<Integer>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                return oldItem.intValue() == newItem.intValue();
+            }
+            @Override
+            public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                return oldItem.intValue() == newItem.intValue();
+            }
+        }, list, -1);
+        dialog.show();
+    }
+    private void delAll(){
+        VodCollect vodInfo=null;
+        while(collectAdapter.getItemCount()>0){
+            vodInfo = collectAdapter.getData().get(0);
+            collectAdapter.remove(0);
+            RoomDataManger.deleteVodCollect(vodInfo.getId());
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.github.tvbox.osc.ui.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
@@ -9,6 +10,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.base.BaseActivity;
@@ -18,10 +21,9 @@ import com.github.tvbox.osc.cache.CacheManager;
 import com.github.tvbox.osc.cache.RoomDataManger;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.ui.adapter.HistoryAdapter;
-import com.github.tvbox.osc.util.FastClickCheckUtil;
-import com.github.tvbox.osc.util.HawkConfig;
-import com.github.tvbox.osc.util.HistoryHelper;
-import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
+import com.github.tvbox.osc.ui.dialog.SelectDialog;
+import com.github.tvbox.osc.util.*;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
@@ -29,6 +31,7 @@ import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,7 @@ public class HistoryActivity extends BaseActivity {
     private TvRecyclerView mGridView;
     private HistoryAdapter historyAdapter;
     private boolean delMode = false;
+    private int curPosition=0;
 
     @Override
     protected int getLayoutResID() {
@@ -82,18 +86,14 @@ public class HistoryActivity extends BaseActivity {
         tvDelAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VodInfo vodInfo=null;
-                while(historyAdapter.getItemCount()>0){
-                    vodInfo = historyAdapter.getData().get(0);
-                    historyAdapter.remove(0);
-                    RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
-                }
+                delAll();
             }
         });
         mGridView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
             @Override
             public boolean onInBorderKeyEvent(int direction, View focused) {
                 if (direction == View.FOCUS_UP) {
+                    curPosition=0;
                     tvDel.setFocusable(true);
                     tvDelAll.setFocusable(true);
                     tvDel.requestFocus();
@@ -109,6 +109,7 @@ public class HistoryActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                curPosition=position;
                 itemView.animate().scaleX(1.05f).scaleY(1.05f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             }
 
@@ -122,33 +123,6 @@ public class HistoryActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 FastClickCheckUtil.check(view);
                 VodInfo vodInfo = historyAdapter.getData().get(position);
-
-//                HistoryDialog historyDialog = new HistoryDialog().build(mContext, vodInfo).setOnHistoryListener(new HistoryDialog.OnHistoryListener() {
-//                    @Override
-//                    public void onLook(VodInfo vodInfo) {
-//                        if (vodInfo != null) {
-//                            Bundle bundle = new Bundle();
-//                            bundle.putInt("id", vodInfo.id);
-//                            bundle.putString("sourceKey", vodInfo.sourceKey);
-//                            jumpActivity(DetailActivity.class, bundle);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onDelete(VodInfo vodInfo) {
-//                        if (vodInfo != null) {
-//                               for (int i = 0; i < historyAdapter.getData().size(); i++) {
-//                                    if (vodInfo.id == historyAdapter.getData().get(i).id) {
-//                                        historyAdapter.remove(i);
-//                                        break;
-//                                    }
-//                                }
-//                                RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
-//                        }
-//                    }
-//                });
-//                historyDialog.show();
-
                 if (vodInfo != null) {
                     if (delMode) {
                         historyAdapter.remove(position);
@@ -247,6 +221,64 @@ public class HistoryActivity extends BaseActivity {
         initData();
         //Toast.makeText(this,"resum",Toast.LENGTH_LONG).show();
         //initData();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(super.onKeyDown(keyCode,event)){
+            return true;
+        }
+        if(keyCode==KeyEvent.KEYCODE_MENU && curPosition>0){
+            showDelDialog();
+            return true;
+        }
+        return false;
+    }
+    private void showDelDialog(){
+        SelectDialog<Integer> dialog = new SelectDialog<>(HistoryActivity.this);
+        List<Integer> list=new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        dialog.setTip("");
+        dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+            @Override
+            public void click(Integer value, int pos) {
+                try {
+                    dialog.cancel();
+                    if(value==1){
+                        VodInfo vodInfo = historyAdapter.getData().get(curPosition);
+                        historyAdapter.remove(curPosition);
+                        RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+                    }else{
+                        delAll();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public String getDisplay(Integer val) {
+                return val==1?"删除选中记录":"清空所有记录";
+            }
+        }, new DiffUtil.ItemCallback<Integer>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                return oldItem.intValue() == newItem.intValue();
+            }
+           @Override
+            public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                return oldItem.intValue() == newItem.intValue();
+            }
+        }, list, -1);
+        dialog.show();
+    }
+    private void delAll(){
+        VodInfo vodInfo=null;
+        while(historyAdapter.getItemCount()>0){
+            vodInfo = historyAdapter.getData().get(0);
+            historyAdapter.remove(0);
+            RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+        }
     }
     private void popupMenu(View view){
         PopupMenu popup = new PopupMenu(HistoryActivity.this,view);
