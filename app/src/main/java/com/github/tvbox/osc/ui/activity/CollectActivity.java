@@ -210,8 +210,10 @@ public class CollectActivity extends BaseActivity {
                     if(value==1){
                         if(p>=0) {
                             VodCollect vodInfo = collectAdapter.getData().get(p);
-                            collectAdapter.remove(p);
-                            RoomDataManger.deleteVodCollect(vodInfo.getId());
+                            if(vodInfo!=null) {
+                                collectAdapter.remove(p);
+                                RoomDataManger.deleteVodCollect(vodInfo.getId());
+                            }
                         }
                     }else{
                         delAll();
@@ -241,8 +243,10 @@ public class CollectActivity extends BaseActivity {
         VodCollect vodInfo=null;
         while(collectAdapter.getItemCount()>0){
             vodInfo = collectAdapter.getData().get(0);
-            collectAdapter.remove(0);
-            RoomDataManger.deleteVodCollect(vodInfo.getId());
+            if(vodInfo!=null) {
+                collectAdapter.remove(0);
+                RoomDataManger.deleteVodCollect(vodInfo.getId());
+            }
         }
     }
 }

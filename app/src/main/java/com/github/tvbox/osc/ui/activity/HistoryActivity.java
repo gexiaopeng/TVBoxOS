@@ -225,9 +225,7 @@ public class HistoryActivity extends BaseActivity {
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        boolean ret=super.onKeyDown(keyCode,event);
-        //showMsg("-keyCode:"+keyCode+",ret:"+ret+",p:"+curPosition);
-        if(ret){
+        if(super.onKeyDown(keyCode,event)){
             return true;
         }
         if(keyCode==KeyEvent.KEYCODE_MENU && curPosition>=0){
@@ -252,8 +250,10 @@ public class HistoryActivity extends BaseActivity {
                     if(value==1){
                         if(p>=0) {
                             VodInfo vodInfo = historyAdapter.getData().get(p);
-                            historyAdapter.remove(p);
-                            RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+                            if(vodInfo!=null) {
+                                historyAdapter.remove(p);
+                                RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+                            }
                         }
                     }else{
                         delAll();
@@ -283,8 +283,10 @@ public class HistoryActivity extends BaseActivity {
         VodInfo vodInfo=null;
         while(historyAdapter.getItemCount()>0){
             vodInfo = historyAdapter.getData().get(0);
-            historyAdapter.remove(0);
-            RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+            if(vodInfo!=null) {
+                historyAdapter.remove(0);
+                RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+            }
         }
     }
     private void popupMenu(View view){
