@@ -57,7 +57,7 @@ public class App extends MultiDexApplication {
                 .setSupportSubunits(Subunits.MM);
         try {
             PlayerHelper.init();
-            JSEngine.getInstance().create();//android 14 加载lib出错
+            //JSEngine.getInstance().create();//android 14 加载lib出错
             //showInfo("App ok!!");
         } catch (Throwable e) {
             showInfo("error:"+e.getMessage());
