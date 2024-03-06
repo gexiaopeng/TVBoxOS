@@ -14,9 +14,7 @@ android {
 
     buildTypes {
         all {
-            ndk {
-                abiFilters 'armeabi-v8a'
-            }
+
         }
         release {
             minifyEnabled false

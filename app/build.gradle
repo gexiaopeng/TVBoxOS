@@ -27,17 +27,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled false
 
-            ndk {
-                abiFilters 'armeabi-v8a'
-            }
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled true
 
-            ndk {
-                abiFilters 'armeabi-v8a'
-            }
         }
     }
 

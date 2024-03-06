@@ -11,18 +11,12 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        externalNativeBuild {
-            cmake {
-                abiFilters 'armeabi-v8a'
-            }
-        }
+
     }
 
     buildTypes {
         all {
-            ndk {
-                abiFilters 'armeabi-v8a'
-            }
+
         }
         release {
             minifyEnabled false
