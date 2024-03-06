@@ -1,6 +1,11 @@
 package com.github.tvbox.osc.base;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.os.Environment;
+import android.os.Handler;
+import android.widget.Toast;
 import androidx.multidex.MultiDexApplication;
 
 import com.github.tvbox.osc.bean.VodInfo;
@@ -16,6 +21,9 @@ import com.orhanobut.hawk.Hawk;
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 /**
  * @author pj567
  * @date :2020/12/17
@@ -23,6 +31,8 @@ import me.jessyan.autosize.unit.Subunits;
  */
 public class App extends MultiDexApplication {
     private static App instance;
+    private Handler mHandler = new Handler();
+    private Context mContext=this;
 
     @Override
     public void onCreate() {
@@ -32,22 +42,50 @@ public class App extends MultiDexApplication {
         // OKGo
         OkGoHelper.init(); //台标获取
         EpgUtil.init();
-        // 初始化Web服务器
-        ControlManager.init(this);
-        //初始化数据库
-        AppDataManager.init();
-        LoadSir.beginBuilder()
-                .addCallback(new EmptyCallback())
-                .addCallback(new LoadingCallback())
-                .commit();
+      //writeLog("--app ok--");
+            // 初始化Web服务器
+            ControlManager.init(this);
+            //初始化数据库
+            AppDataManager.init();
+            LoadSir.beginBuilder()
+                    .addCallback(new EmptyCallback())
+                    .addCallback(new LoadingCallback())
+                    .commit();
         AutoSizeConfig.getInstance().setCustomFragment(true).getUnitsManager()
-                .setSupportDP(false)
-                .setSupportSP(false)
+                .setSupportDP(true)
+                .setSupportSP(true)
                 .setSupportSubunits(Subunits.MM);
-        PlayerHelper.init();
-        JSEngine.getInstance().create();
-    }
+        try {
+            PlayerHelper.init();
+            JSEngine.getInstance().create();//android 14 加载lib出错
+            //showInfo("App ok!!");
+        } catch (Throwable e) {
+            showInfo("error:"+e.getMessage());
+        }
+        //Toast.makeText(this, "App OK:"+Environment.getExternalStorageDirectory().getAbsolutePath(), Toast.LENGTH_LONG).show();
 
+        /**
+
+
+
+
+         **/
+
+    }
+    private void showInfo(String str){
+        try {
+             Runnable info = new Runnable() {
+                @SuppressLint({"DefaultLocale", "SetTextI18n"})
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, str, Toast.LENGTH_LONG).show();
+                }
+            };
+            mHandler.post(info);
+        } catch (Exception e) {
+            Toast.makeText(this, "info error:"+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
     private void initParams() {
         // Hawk
         Hawk.init(this).build();
