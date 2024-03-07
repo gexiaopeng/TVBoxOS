@@ -22,7 +22,9 @@ import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * @author pj567
@@ -57,10 +59,11 @@ public class App extends MultiDexApplication {
                 .setSupportSubunits(Subunits.MM);
         try {
             PlayerHelper.init();
-            //JSEngine.getInstance().create();//android 14 加载lib出错
+            JSEngine.getInstance().create();//android 14 加载lib出错
             //showInfo("App ok!!");
         } catch (Throwable e) {
             showInfo("error:"+e.getMessage());
+            //writeLog("error:"+e.getMessage());
         }
         //Toast.makeText(this, "App OK:"+Environment.getExternalStorageDirectory().getAbsolutePath(), Toast.LENGTH_LONG).show();
 
@@ -84,6 +87,30 @@ public class App extends MultiDexApplication {
             mHandler.post(info);
         } catch (Exception e) {
             Toast.makeText(this, "info error:"+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    private void writeLog(String str){
+        String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+        File dir = new File(root + "/tvbox_logs/");
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+        FileOutputStream out=null;
+        try {
+            out=new FileOutputStream(root + "/tvbox_logs/log.txt");
+            out.write(str.getBytes());
+            out.flush();
+        } catch (Exception e) {
+            showInfo("writeLog error:"+e.getMessage());
+        }finally {
+            if(out!=null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+
+                }
+                out=null;
+            }
         }
     }
     private void initParams() {
